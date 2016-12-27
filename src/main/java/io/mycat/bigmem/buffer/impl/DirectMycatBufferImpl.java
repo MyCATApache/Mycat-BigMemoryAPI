@@ -45,19 +45,19 @@ public class DirectMycatBufferImpl extends MycatBufferBase {
     /**
      * 构造方法，进行内存容量的分配操作
     * 构造方法
-    * @param moneySize
+    * @param memorySize 内存容量信息
     */
-    public DirectMycatBufferImpl(int moneySize) {
+    public DirectMycatBufferImpl(int memorySize) {
         // // 获得首地址信息
         unsafe = UnsafeHelper.getUnsafe();
         // 进行内存分配
-        address = unsafe.allocateMemory(moneySize);
+        address = unsafe.allocateMemory(memorySize);
         // 设置所有的内存地址都为0
-        unsafe.setMemory(address, moneySize, (byte) 0);
+        unsafe.setMemory(address, memorySize, (byte) 0);
         // 设置limit以及空量信息
-        this.limit = moneySize;
+        this.limit = memorySize;
         // 设置容量
-        this.capacity = moneySize;
+        this.capacity = memorySize;
     }
 
     public DirectMycatBufferImpl(DirectMycatBufferImpl dirbuffer, int position, int limit, long address) {

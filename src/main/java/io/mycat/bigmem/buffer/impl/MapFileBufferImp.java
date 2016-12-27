@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.Semaphore;
 
-import io.mycat.bigmem.buffer.MyCatCallbackInf;
+import io.mycat.bigmem.buffer.CatCallbackInf;
 import io.mycat.bigmem.buffer.MycatBuffer;
 import io.mycat.bigmem.buffer.MycatBufferBase;
 import io.mycat.bigmem.buffer.MycatSwapBufer;
@@ -345,7 +345,7 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer 
     }
 
     @Override
-    public void swapIn(MyCatCallbackInf notify) throws IOException {
+    public void swapIn(CatCallbackInf notify) throws IOException {
 
         // 验证当前内存整理标识
         checkClearFlag();
@@ -357,28 +357,21 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer 
 
     }
 
-    private void callBackDoIt(final MyCatCallbackInf back) {
+    private void callBackDoIt(final CatCallbackInf back) {
 
-        // 进行异步的通知调用
-        Runnable callBack = new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    back.callBack();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        // 进行异步的通知调用,使用jdk8的特性直接执行回调函数
+        ThreadPool.Instance().submit(() -> {
+            try {
+                back.callBack();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        };
-
-        // 提交到线程池中执行
-        ThreadPool.Instance().submit(callBack);
+        });
 
     }
 
     @Override
-    public void swapOut(MyCatCallbackInf notify) {
+    public void swapOut(CatCallbackInf notify) {
 
         // 验证当前内存整理标识
         checkClearFlag();
