@@ -3,7 +3,6 @@ package io.mycat.bigmem.buffer.mapfile;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import io.mycat.bigmem.buffer.MyCatCallbackInf;
 import io.mycat.bigmem.buffer.MycatBufferBase;
 import io.mycat.bigmem.buffer.MycatSwapBufer;
 import io.mycat.bigmem.cacheway.alloctor.MycatMemoryAlloctor;
@@ -63,19 +62,13 @@ public class TestMapFileBuffer {
             }
 
             // 进行异步的通知
-            mybufferSwap.swapOut(new MyCatCallbackInf() {
-                @Override
-                public void callBack() throws Exception {
-                    System.out.println("当前异步交换到磁盘");
-                }
+            mybufferSwap.swapOut(() -> {
+                System.out.println("当前异步交换到磁盘");
             });
 
-            mybufferSwap.swapIn(new MyCatCallbackInf() {
-
-                @Override
-                public void callBack() throws Exception {
-                    System.out.println("异步交换到内存中");
-                }
+            // 使用jdk8的特性
+            mybufferSwap.swapIn(() -> {
+                System.out.println("异步交换到内存中");
             });
 
             System.out.println("交换后的结果:加载");
