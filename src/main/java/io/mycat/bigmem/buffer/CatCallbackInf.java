@@ -11,7 +11,7 @@ package io.mycat.bigmem.buffer;
 * 文件描述：TODO
 * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
 */
-public interface MyCatCallbackInf {
+public interface CatCallbackInf {
 
     /**
      * 进行异步的通知
