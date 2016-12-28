@@ -17,7 +17,7 @@ public class TestMapFileBuffer {
             MycatMemoryAlloctor poolBuffer = new MycatMemoryAlloctor(LocatePolicy.Normal, 1024, 128, (short) 1);
 
             // 进行内存的申请
-            MycatBufferBase mybuffer = poolBuffer.allocationMemory(1024, System.currentTimeMillis());
+            MycatBufferBase mybuffer = poolBuffer.allocMem(1,1024);
 
             mybuffer.beginOp();
 
