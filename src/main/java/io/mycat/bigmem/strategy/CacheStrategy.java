@@ -1,11 +1,11 @@
 package io.mycat.bigmem.strategy;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import io.mycat.bigmem.console.LocatePolicy;
 import io.mycat.bigmem.strategy.impl.DirectMemCacheStategyImpl;
 import io.mycat.bigmem.strategy.impl.FileMapCacheStategyImpl;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 缓存的策略信息
@@ -24,7 +24,8 @@ public class CacheStrategy {
      * 缓存策略的信息存储的Map
     * @字段说明 strategyMap
     */
-    private static final Map<LocatePolicy, CacheStrategyInf> strategyMap = new HashMap<>();
+    private static final Map<LocatePolicy, CacheStrategyInf> strategyMap
+            = new HashMap<>();
 
     static {
         // 使用直接内存进行缓存的策略
