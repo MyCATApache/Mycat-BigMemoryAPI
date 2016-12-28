@@ -15,7 +15,7 @@ public class TestDirectBufferPool {
         MycatMemoryAlloctor poolBuffer = new MycatMemoryAlloctor(LocatePolicy.Core, 2048, 128, (short) 1);
 
         // 进行内存的申请
-        MycatBufferBase buffer = poolBuffer.allocationMemory(1024, System.currentTimeMillis());
+        MycatBufferBase buffer = poolBuffer.allocMem(1,1024);
 
         buffer.beginOp();
 
@@ -28,10 +28,10 @@ public class TestDirectBufferPool {
         // 测试全部回收
         // 回收内存之前，需要设置limit的大小，以确定回收的内存大小
         buffer.limit(256);
-        poolBuffer.recycleNotUse(buffer);
+        poolBuffer.recyleMem(buffer);
 
         // 测试内存归还后，是否可继续申请
-        MycatBufferBase buffer2 = poolBuffer.allocationMemory(1792, System.currentTimeMillis());
+        MycatBufferBase buffer2 = poolBuffer.allocMem(1,1792);
 
         System.out.println("内存空间大小:" + buffer2.limit());
 

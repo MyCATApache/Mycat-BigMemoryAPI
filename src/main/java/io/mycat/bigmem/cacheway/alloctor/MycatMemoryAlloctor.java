@@ -4,8 +4,7 @@ import java.io.IOException;
 
 import io.mycat.bigmem.buffer.DirectMemAddressInf;
 import io.mycat.bigmem.buffer.MycatBufferBase;
-import io.mycat.bigmem.buffer.MycatMovableBufer;
-import io.mycat.bigmem.cacheway.CacheOperatorInf;
+import io.mycat.bigmem.cacheway.MemoryAlloctorInf;
 import io.mycat.bigmem.console.LocatePolicy;
 
 /**
@@ -19,7 +18,7 @@ import io.mycat.bigmem.console.LocatePolicy;
  * 文件描述：TODO
  * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
  */
-public class MycatMemoryAlloctor implements CacheOperatorInf {
+public class MycatMemoryAlloctor implements MemoryAlloctorInf {
 
     /**
     * 内存池对象信息
@@ -58,7 +57,7 @@ public class MycatMemoryAlloctor implements CacheOperatorInf {
     * @return
     * @创建日期 2016年12月19日
     */
-    public MycatBufferBase allocationMemory(int size, long timeOut) {
+    public MycatBufferBase allocMem(int allocFlag,int size) {
         // 计算需要的chunk大小
         int needChunk = size % CHUNK_SIZE == 0 ? size / CHUNK_SIZE : size / CHUNK_SIZE + 1;
         // 取得内存页信息
@@ -73,54 +72,57 @@ public class MycatMemoryAlloctor implements CacheOperatorInf {
         // 如果能找合适的内存空间，则进行分配
         if (null != page) {
             // 针对当前的chunk进行内存的分配操作
-            MycatBufferBase buffer = page.alloactionMemory(needChunk, timeOut);
+            MycatBufferBase buffer = page.alloactionMemory(needChunk);
             return buffer;
         }
         return null;
 
     }
 
+    // /**
+    // * 进行内存的归还操作
+    // * 方法描述
+    // * @param buffer
+    // * @创建日期 2016年12月19日
+    // */
+    // public boolean recycleAll(MycatBufferBase buffer) {
+    //
+    // // 计算chunk归还的数量
+    // int chunkNum = (int) buffer.capacity() / CHUNK_SIZE;
+    //
+    // // 获得内存buffer
+    // DirectMemAddressInf thisNavBuf = (DirectMemAddressInf) buffer;
+    // // attachment对象在buf.slice();的时候将attachment对象设置为总的buff对象
+    // DirectMemAddressInf parentBuf = (DirectMemAddressInf)
+    // thisNavBuf.getAttach();
+    // // 已经使用的地址减去父类最开始的地址，即为所有已经使用的地址，除以chunkSize得到chunk当前开始的地址,得到整块内存开始的地址
+    // int startChunk = (int) (thisNavBuf.address() - parentBuf.address()) /
+    // chunkNum;
+    //
+    // boolean recyProc = false;
+    //
+    // for (BufferPage pageMemory : POOL) {
+    // if ((recyProc = pageMemory.recycleBuffer((MycatMovableBufer) parentBuf,
+    // startChunk, chunkNum)) == true) {
+    // break;
+    // }
+    // }
+    //
+    // if (!recyProc) {
+    // System.out.println("memory recycle fail");
+    // return false;
+    // }
+    //
+    // return true;
+    // }
+
     /**
     * 进行内存的归还操作
     * 方法描述
     * @param buffer
     * @创建日期 2016年12月19日
     */
-    public boolean recycleAll(MycatBufferBase buffer) {
-
-        // 计算chunk归还的数量
-        int chunkNum = (int) buffer.capacity() / CHUNK_SIZE;
-
-        // 获得内存buffer
-        DirectMemAddressInf thisNavBuf = (DirectMemAddressInf) buffer;
-        // attachment对象在buf.slice();的时候将attachment对象设置为总的buff对象
-        DirectMemAddressInf parentBuf = (DirectMemAddressInf) thisNavBuf.getAttach();
-        // 已经使用的地址减去父类最开始的地址，即为所有已经使用的地址，除以chunkSize得到chunk当前开始的地址,得到整块内存开始的地址
-        int startChunk = (int) (thisNavBuf.address() - parentBuf.address()) / chunkNum;
-
-        boolean recyProc = false;
-
-        for (BufferPage pageMemory : POOL) {
-            if ((recyProc = pageMemory.recycleBuffer((MycatMovableBufer) parentBuf, startChunk, chunkNum)) == true) {
-                break;
-            }
-        }
-
-        if (!recyProc) {
-            System.out.println("memory recycle fail");
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-    * 进行内存的归还操作
-    * 方法描述
-    * @param buffer
-    * @创建日期 2016年12月19日
-    */
-    public boolean recycleNotUse(MycatBufferBase buffer) {
+    public void recyleMem(MycatBufferBase buffer) {
 
         if (buffer.limit() < buffer.capacity()) {
 
@@ -140,7 +142,7 @@ public class MycatMemoryAlloctor implements CacheOperatorInf {
             boolean recyProc = false;
 
             for (BufferPage pageMemory : POOL) {
-                if ((recyProc = pageMemory.recycleBuffer((MycatMovableBufer) parentBuf, startChunk,
+                if ((recyProc = pageMemory.recycleBuffer((MycatBufferBase) parentBuf, startChunk,
                         chunkNum)) == true) {
                     break;
                 }
@@ -148,14 +150,11 @@ public class MycatMemoryAlloctor implements CacheOperatorInf {
 
             if (!recyProc) {
                 System.out.println("memory recycle fail");
-                return false;
             }
-            return true;
         } else {
             System.out.println("not memory recycle");
         }
 
-        return false;
     }
 
 }
