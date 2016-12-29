@@ -11,31 +11,32 @@ public class TestDirectBufferPool {
 
     public static void main(String[] args) throws IOException {
 
-        // 构建内存池对象
-        MycatMemoryAlloctor poolBuffer = new MycatMemoryAlloctor(LocatePolicy.Core, 2048, 128, (short) 1);
-
-        // 进行内存的申请
-        MycatBufferBase buffer = poolBuffer.allocMem(1,1024);
-
-        buffer.beginOp();
-
-        // 进行内存数据卦
-        fillValue(buffer);
-
-        printValue(buffer);
-
-        // 进行内存的回收
-        // 测试全部回收
-        // 回收内存之前，需要设置limit的大小，以确定回收的内存大小
-        buffer.limit(256);
-        poolBuffer.recyleMem(buffer);
-
-        // 测试内存归还后，是否可继续申请
-        MycatBufferBase buffer2 = poolBuffer.allocMem(1,1792);
-
-        System.out.println("内存空间大小:" + buffer2.limit());
-
-        buffer.commitOp();
+        // // 构建内存池对象
+        // MycatMemoryAlloctor poolBuffer = new
+        // MycatMemoryAlloctor(LocatePolicy.Core, 2048, 128, (short) 1);
+        //
+        // // 进行内存的申请
+        // MycatBufferBase buffer = poolBuffer.allocMem(1,1024);
+        //
+        // buffer.beginOp();
+        //
+        // // 进行内存数据卦
+        // fillValue(buffer);
+        //
+        // printValue(buffer);
+        //
+        // // 进行内存的回收
+        // // 测试全部回收
+        // // 回收内存之前，需要设置limit的大小，以确定回收的内存大小
+        // buffer.limit(256);
+        // poolBuffer.recyleMem(buffer);
+        //
+        // // 测试内存归还后，是否可继续申请
+        // MycatBufferBase buffer2 = poolBuffer.allocMem(1,1792);
+        //
+        // System.out.println("内存空间大小:" + buffer2.limit());
+        //
+        // buffer.commitOp();
     }
 
     /**
