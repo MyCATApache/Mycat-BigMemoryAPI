@@ -20,7 +20,7 @@ package io.mycat.bigmem.buffer;
 * 文件描述：TODO
 * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
 */
-public interface MycatMovableBufer extends MycatBuffer {
+public interface MycatMovableBufer  {
 
     /**
      * 内存可以被管理器移动，首次访问（一个begin & commit操作之后）之前，

@@ -22,6 +22,9 @@ public class TestFlag {
         int value6 = 7&4;
         print(value6);
         
+        int value7= 1 <<0;
+        print(value7);
+        
         
         
     }

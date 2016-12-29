@@ -13,6 +13,7 @@ import java.util.concurrent.Semaphore;
 import io.mycat.bigmem.buffer.CatCallbackInf;
 import io.mycat.bigmem.buffer.MycatBuffer;
 import io.mycat.bigmem.buffer.MycatBufferBase;
+import io.mycat.bigmem.buffer.MycatMovableBufer;
 import io.mycat.bigmem.buffer.MycatSwapBufer;
 import io.mycat.bigmem.console.BufferException;
 import io.mycat.bigmem.threadpool.ThreadPool;
@@ -33,7 +34,7 @@ import sun.nio.ch.FileChannelImpl;
 * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
 */
 @SuppressWarnings("restriction")
-public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer {
+public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer, MycatMovableBufer {
 
     /**
      * 内存控制的对象信息 
@@ -58,6 +59,11 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer 
     // * @字段说明 BYTE_ARRAY_OFFSET
     // */
     // public static final int BYTE_ARRAY_OFFSET;
+
+    /**
+     * 默认文件大小为128M
+     */
+    private int fileSize = 1024 * 1024 * 128;
 
     /**
      * 文件名称
@@ -116,7 +122,7 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer 
         randomFile = new RandomAccessFile(fileName, "rw");
 
         // 设置文件大小
-        randomFile.setLength(size);
+        randomFile.setLength(this.fileSize);
         channel = randomFile.getChannel();
 
         // 获得内存映射的地地址
@@ -127,8 +133,8 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer 
         }
 
         // 设置容量相关的东西
-        this.limit = size;
-        this.capacity = size;
+        this.limit = this.fileSize;
+        this.capacity = this.fileSize;
     }
 
     public MapFileBufferImp(MapFileBufferImp dirbuffer, int position, int limit, long address) {
@@ -302,7 +308,7 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer 
         randomFile = new RandomAccessFile(fileName, "rw");
 
         // 设置文件大小
-        randomFile.setLength(this.capacity);
+        randomFile.setLength(this.fileSize);
         channel = randomFile.getChannel();
 
         // 重新获取内存的地址信息
@@ -313,9 +319,9 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer 
         }
 
         // 设置容量相关的东西
-        this.limit = this.capacity;
+        this.limit = this.fileSize;
         // 加载后设置两个指针
-        this.putPosition = 0;
+        this.putPosition = (int) channel.position();
         this.getPosition = 0;
 
     }
@@ -418,6 +424,22 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer 
     @Override
     public boolean getClearFlag() {
         return clearFlag;
+    }
+
+    /**
+     * 获取文件大小的方法
+     * @return
+     */
+    public int getFileSize() {
+        return fileSize;
+    }
+
+    /**
+     * 设置文件大小的方法
+     * @param fileSize
+     */
+    public void setFileSize(int fileSize) {
+        this.fileSize = fileSize;
     }
 
 }
