@@ -47,4 +47,9 @@ public class DirectMemoryBigCache implements IBigCache {
     public void recycle() throws IOException {
 
     }
+
+    @Override
+    public void reset() {
+
+    }
 }

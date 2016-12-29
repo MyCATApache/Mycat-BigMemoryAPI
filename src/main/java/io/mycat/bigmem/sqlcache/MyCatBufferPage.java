@@ -15,16 +15,32 @@ import java.util.concurrent.atomic.AtomicLong;
  * @create 2016-12-27 18:49
  */
 
-
 public abstract class MyCatBufferPage implements IBufferPage {
     private final static Logger logger =
                 LoggerFactory.getLogger(MyCatBufferPage.class);
 
     protected volatile boolean dirty = false;
     protected volatile boolean recycled = false;
+
+    /**
+     * Thread Local Buffer Page
+     */
     protected ThreadLocalByteBuffer threadLocalByteBuffer;
+
+    /**
+     * Page 上次访问时间
+     */
     protected AtomicLong lastAccessedTimestamp;
+
+    /**
+     * Page 访问引用计数
+     */
     protected AtomicLong refCount = new AtomicLong(0);
+
+
+    /**
+     * 缓存时间
+     */
     protected long cacheTTL = 0L;
 
     public MyCatBufferPage(ByteBuffer byteBuffer,long cacheTTL){
@@ -33,14 +49,29 @@ public abstract class MyCatBufferPage implements IBufferPage {
         this.cacheTTL = cacheTTL;
     }
 
+
+    /**
+     * Page 是 '脏页'
+     * @return
+     */
+
     public boolean isDirty() {
         return dirty;
     }
 
+
+    /**
+     * 设置 Page 是否 是 ‘脏页’
+     * @param dirty
+     */
     public void setDirty(boolean dirty) {
         this.dirty = dirty;
     }
 
+    /**
+     * Page 是否被 unmap了
+     * @return
+     */
     public boolean isRecycled() {
         return recycled;
     }
