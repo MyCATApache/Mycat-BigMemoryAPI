@@ -1,10 +1,19 @@
 package io.mycat.bigmem.cacheway.alloctor;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import io.mycat.bigmem.buffer.DirectMemAddressInf;
 import io.mycat.bigmem.buffer.MycatBufferBase;
 import io.mycat.bigmem.cacheway.MemoryAlloctorInf;
+import io.mycat.bigmem.cacheway.alloctor.directmem.DirectBufferPage;
+import io.mycat.bigmem.console.ChunkMemoryAllotEnum;
 import io.mycat.bigmem.console.LocatePolicy;
 
 /**
@@ -21,16 +30,16 @@ import io.mycat.bigmem.console.LocatePolicy;
 public class MycatMemoryAlloctor implements MemoryAlloctorInf {
 
     /**
-    * 内存池对象信息
-    * @字段说明 pool
-    */
-    private final BufferPage[] POOL;
-
-    /**
-    * 每个chunk的大小
-    * @字段说明 CHUNK_SIZE
-    */
-    private final int CHUNK_SIZE;
+     * 存储级别的map
+     */
+    private static Set<ChunkMemoryAllotEnum> MEMORY_LEVEL = new TreeSet<>((o1, o2) -> {
+        if (o1.getLevel() < o2.getLevel()) {
+            return 1;
+        } else if (o1.getLevel() > o2.getLevel()) {
+            return -1;
+        }
+        return 0;
+    });
 
     /**
     * 用来构建内存池对象信息
@@ -40,13 +49,96 @@ public class MycatMemoryAlloctor implements MemoryAlloctorInf {
     * @param poolSize
      * @throws IOException 
     */
-    public MycatMemoryAlloctor(LocatePolicy policy, int memSize, int chunkSize, short poolSize) throws IOException {
-        CHUNK_SIZE = chunkSize;
-        // 进行每个内存页的初始化
-        POOL = new BufferPage[poolSize];
-        // 进行每个chunk的页面的分配内存操作
-        for (int i = 0; i < poolSize; i++) {
-            POOL[i] = new BufferPage(MycatBufferBase.getMyCatBuffer(policy, memSize), CHUNK_SIZE);
+    public MycatMemoryAlloctor() throws IOException {
+        int msize = 1024 * 1024;
+
+        for (int i = 0; i < ChunkMemoryAllotEnum.values().length; i++) {
+            MEMORY_LEVEL.add(ChunkMemoryAllotEnum.values()[i]);
+        }
+
+        // 构建文件映射的相关初始化
+        ChunkMemoryAllotEnum.MEMORY_MAPFILE.getChunkAllot().allotorInit(msize * 1024, 4096, (short) 4);
+        // 可移动的内存文件块的构建
+        ChunkMemoryAllotEnum.MEMORY_DIRECT_MOVE.getChunkAllot().allotorInit(msize * 512, 4096, (short) 4);
+        // 进行不可移动的内存块的构建
+        ChunkMemoryAllotEnum.MEMORY_DIRECT.getChunkAllot().allotorInit(msize * 1024, 4096, (short) 4);
+    }
+
+    /**
+     * 获取最高级别，也就是最先匹配的级别
+     * @param allocFlag
+     * @param minlevel
+     * @return
+     */
+    private ChunkMemoryAllotEnum memoryMatchlevel(int allocFlag, int index) {
+
+        ChunkMemoryAllotEnum chunkAllot = null;
+
+        for (ChunkMemoryAllotEnum chunkMemoryAllotEnum : MEMORY_LEVEL) {
+            // 首次需要匹配上最优的内存内存操作
+            if (index == 0) {
+                // 检查是否有当前的级别
+                if ((chunkMemoryAllotEnum.getLevel() & allocFlag) == chunkMemoryAllotEnum.getLevel()) {
+                    chunkAllot = chunkMemoryAllotEnum;
+                    index = chunkMemoryAllotEnum.getMoveBit();
+                    break;
+                }
+            } else {
+                // 按级别选择最优的内存
+                if (chunkMemoryAllotEnum.getMoveBit() < index
+                        && (chunkMemoryAllotEnum.getLevel() & allocFlag) == chunkMemoryAllotEnum.getLevel()) {
+                    chunkAllot = chunkMemoryAllotEnum;
+                    index = chunkMemoryAllotEnum.getMoveBit();
+                }
+            }
+        }
+
+        return chunkAllot;
+    }
+
+    public static void main(String[] args) {
+
+        Set<ChunkMemoryAllotEnum> MEMORY_LEVEL = new TreeSet<>((o1, o2) -> {
+            if (o1.getLevel() < o2.getLevel()) {
+                return 1;
+            } else if (o1.getLevel() > o2.getLevel()) {
+                return -1;
+            }
+            return 0;
+        });
+
+        for (int i = 0; i < ChunkMemoryAllotEnum.values().length; i++) {
+            MEMORY_LEVEL.add(ChunkMemoryAllotEnum.values()[i]);
+        }
+
+        int level = 3;
+
+        int index = 0;
+
+        // for (ChunkMemoryAllotEnum chunkMemoryAllotEnum : MEMORY_LEVEL) {
+        // if ((chunkMemoryAllotEnum.getLevel() & level) ==
+        // chunkMemoryAllotEnum.getLevel()) {
+        // System.out.println("第一次的级别:" + chunkMemoryAllotEnum.getLevel());
+        // index = chunkMemoryAllotEnum.getMoveBit();
+        // break;
+        // }
+        //
+        // }
+
+        for (ChunkMemoryAllotEnum chunkMemoryAllotEnum : MEMORY_LEVEL) {
+            if (index == 0) {
+                if ((chunkMemoryAllotEnum.getLevel() & level) == chunkMemoryAllotEnum.getLevel()) {
+                    System.out.println("第2次的级别:" + chunkMemoryAllotEnum.getLevel());
+                    index = chunkMemoryAllotEnum.getMoveBit();
+                }
+            } else {
+                if (chunkMemoryAllotEnum.getMoveBit() < index
+                        && (chunkMemoryAllotEnum.getLevel() & level) == chunkMemoryAllotEnum.getLevel()) {
+                    System.out.println("第2次的级别:" + chunkMemoryAllotEnum.getLevel());
+                    index = chunkMemoryAllotEnum.getMoveBit();
+                }
+            }
+
         }
     }
 
@@ -57,64 +149,25 @@ public class MycatMemoryAlloctor implements MemoryAlloctorInf {
     * @return
     * @创建日期 2016年12月19日
     */
-    public MycatBufferBase allocMem(int allocFlag,int size) {
-        // 计算需要的chunk大小
-        int needChunk = size % CHUNK_SIZE == 0 ? size / CHUNK_SIZE : size / CHUNK_SIZE + 1;
-        // 取得内存页信息
-        BufferPage page = null;
-        for (BufferPage pageMemory : POOL) {
-            if (pageMemory.checkNeedChunk(needChunk)) {
-                page = pageMemory;
+    public MycatBufferBase allocMem(int allocFlag, int size) {
+
+        MycatBufferBase result = null;
+
+        // 首次为0匹配上最想要的内存
+        int index = 0;
+
+        ChunkMemoryAllotEnum allot = null;
+        while ((allot = this.memoryMatchlevel(allocFlag, index)) != null) {
+            // 进行内存分配
+            result = allot.getChunkAllot().allocMem(size);
+            if (result == null) {
+                continue;
+            } else {
                 break;
             }
         }
-
-        // 如果能找合适的内存空间，则进行分配
-        if (null != page) {
-            // 针对当前的chunk进行内存的分配操作
-            MycatBufferBase buffer = page.alloactionMemory(needChunk);
-            return buffer;
-        }
-        return null;
-
+        return result;
     }
-
-    // /**
-    // * 进行内存的归还操作
-    // * 方法描述
-    // * @param buffer
-    // * @创建日期 2016年12月19日
-    // */
-    // public boolean recycleAll(MycatBufferBase buffer) {
-    //
-    // // 计算chunk归还的数量
-    // int chunkNum = (int) buffer.capacity() / CHUNK_SIZE;
-    //
-    // // 获得内存buffer
-    // DirectMemAddressInf thisNavBuf = (DirectMemAddressInf) buffer;
-    // // attachment对象在buf.slice();的时候将attachment对象设置为总的buff对象
-    // DirectMemAddressInf parentBuf = (DirectMemAddressInf)
-    // thisNavBuf.getAttach();
-    // // 已经使用的地址减去父类最开始的地址，即为所有已经使用的地址，除以chunkSize得到chunk当前开始的地址,得到整块内存开始的地址
-    // int startChunk = (int) (thisNavBuf.address() - parentBuf.address()) /
-    // chunkNum;
-    //
-    // boolean recyProc = false;
-    //
-    // for (BufferPage pageMemory : POOL) {
-    // if ((recyProc = pageMemory.recycleBuffer((MycatMovableBufer) parentBuf,
-    // startChunk, chunkNum)) == true) {
-    // break;
-    // }
-    // }
-    //
-    // if (!recyProc) {
-    // System.out.println("memory recycle fail");
-    // return false;
-    // }
-    //
-    // return true;
-    // }
 
     /**
     * 进行内存的归还操作
@@ -123,38 +176,11 @@ public class MycatMemoryAlloctor implements MemoryAlloctorInf {
     * @创建日期 2016年12月19日
     */
     public void recyleMem(MycatBufferBase buffer) {
+        for (ChunkMemoryAllotEnum chunkMemoryAllotEnum : ChunkMemoryAllotEnum.values()) {
 
-        if (buffer.limit() < buffer.capacity()) {
-
-            // 计算chunk归还的数量
-            int chunkNum = (int) (buffer.capacity() - buffer.limit()) / CHUNK_SIZE;
-
-            // 获得内存buffer
-            DirectMemAddressInf thisNavBuf = (DirectMemAddressInf) buffer;
-            // attachment对象在buf.slice();的时候将attachment对象设置为总的buff对象
-            DirectMemAddressInf parentBuf = (DirectMemAddressInf) thisNavBuf.getAttach();
-
-            int chunkAdd = buffer.limit() % CHUNK_SIZE == 0 ? (int) buffer.limit() / CHUNK_SIZE
-                    : (int) buffer.limit() / CHUNK_SIZE + 1;
-            // 已经使用的地址减去父类最开始的地址，即为所有已经使用的地址，除以chunkSize得到chunk当前开始的地址,得到整块内存开始的地址
-            int startChunk = (int) ((thisNavBuf.address() - parentBuf.address()) / CHUNK_SIZE) + chunkAdd;
-
-            boolean recyProc = false;
-
-            for (BufferPage pageMemory : POOL) {
-                if ((recyProc = pageMemory.recycleBuffer((MycatBufferBase) parentBuf, startChunk,
-                        chunkNum)) == true) {
-                    break;
-                }
-            }
-
-            if (!recyProc) {
-                System.out.println("memory recycle fail");
-            }
-        } else {
-            System.out.println("not memory recycle");
+            // 尝试所有方式进行内存的归还操作
+            chunkMemoryAllotEnum.getChunkAllot().recyleMem(buffer);
         }
-
     }
 
 }

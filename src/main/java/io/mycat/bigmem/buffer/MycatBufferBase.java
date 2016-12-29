@@ -17,7 +17,7 @@ import io.mycat.bigmem.console.LocatePolicy;
 * 文件描述：TODO
 * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
 */
-public abstract class MycatBufferBase implements MycatMovableBufer, DirectMemAddressInf {
+public abstract class MycatBufferBase implements MycatBuffer, DirectMemAddressInf {
 
     /**
      * 当前写入的指针位置

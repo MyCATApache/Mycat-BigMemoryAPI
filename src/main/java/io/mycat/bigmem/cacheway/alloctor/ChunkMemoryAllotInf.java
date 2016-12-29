@@ -1,13 +1,21 @@
-package io.mycat.bigmem.cacheway;
+package io.mycat.bigmem.cacheway.alloctor;
 
 import io.mycat.bigmem.buffer.MycatBufferBase;
 
 /**
- * 整体的内存的分配接口
+ * 大块的内存分配接口
  * @author liujun
  * 2016年12月29日
  */
-public interface MemoryAlloctorInf {
+public interface ChunkMemoryAllotInf {
+
+    /**
+     * 进行分配内在的初始化操作
+     * @param memSize 内存大小
+     * @param chunkSize 块内存的大小
+     * @param poolSize 内存池的大小
+     */
+    public void allotorInit(int memSize, int chunkSize, short poolSize);
 
     /**
      * 进行缓存空间的分配
@@ -17,15 +25,15 @@ public interface MemoryAlloctorInf {
     * @return
     * @创建日期 2016年12月20日
     */
-    public MycatBufferBase allocMem(int allocFlag, int size);
+    public MycatBufferBase allocMem(int size);
 
     /**
      * 进行缓存空间的部分释放，即释放buffer的limit与capacity之间的空间释放
      * 方法描述
-     * @param bufer
+     * @param buffer
      * @return
      * @创建日期 2016年12月20日
      */
-    public void recyleMem(MycatBufferBase bufer);
+    public void recyleMem(MycatBufferBase buffer);
 
 }
