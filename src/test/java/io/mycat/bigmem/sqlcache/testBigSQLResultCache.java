@@ -66,7 +66,7 @@ public class testBigSQLResultCache {
 
 
         /**
-         * Ê¹ÓÃÄÚ´æÓ³ÉäCache£¬´æ·ÅSQL½á¹û¼¯
+         * ä½¿ç”¨å†…å­˜æ˜ å°„Cacheï¼Œå­˜æ”¾SQLç»“æœé›†
          */
 
         BigSQLResultCache sqlResultCache
@@ -77,7 +77,7 @@ public class testBigSQLResultCache {
             backList.add(rows);
 
             /**
-             * Ê¹ÓÃÄÚ´æÓ³ÉäCache£¬´æ·ÅSQL½á¹û¼¯
+             * ä½¿ç”¨å†…å­˜æ˜ å°„Cacheï¼Œå­˜æ”¾SQLç»“æœé›†
              */
             sqlResultCache.put(rows);
         }
@@ -86,7 +86,7 @@ public class testBigSQLResultCache {
 
 
         /**
-         * ÑéÖ¤ÄÚ´æÓ³ÉäCache£¬´æ·ÅSQL½á¹û¼¯
+         * éªŒè¯å†…å­˜æ˜ å°„Cacheï¼Œå­˜æ”¾SQLç»“æœé›†
          */
         BigSQLResultCache sqlResCache = sqlResultCacheMap.get(sql);
         Assert.assertEquals(backList.size(),sqlResCache.size());
@@ -98,7 +98,7 @@ public class testBigSQLResultCache {
 
 
         /**
-         * ÖØ¸´¶Á
+         * é‡å¤è¯»
          */
         sqlResCache.reset();
         for (int i = 0; i <backList.size() ; i++) {
@@ -112,7 +112,6 @@ public class testBigSQLResultCache {
         if (sqlResultCache !=null){
             sqlResultCache.removeAll();
         }
-
 
     }
 
