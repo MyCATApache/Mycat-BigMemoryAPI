@@ -176,11 +176,8 @@ public class MycatMemoryAlloctor implements MemoryAlloctorInf {
     * @创建日期 2016年12月19日
     */
     public void recyleMem(MycatBufferBase buffer) {
-        for (ChunkMemoryAllotEnum chunkMemoryAllotEnum : ChunkMemoryAllotEnum.values()) {
 
-            // 尝试所有方式进行内存的归还操作
-            chunkMemoryAllotEnum.getChunkAllot().recyleMem(buffer);
-        }
+        // 明确内存的分配方式进行归还操作
     }
 
 }
