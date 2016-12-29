@@ -18,19 +18,34 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class PageLRUCache {
     private final static Logger logger = LoggerFactory.getLogger(PageLRUCache.class);
+
     public static final long DEFAULT_TTL = 5 * 1000;
+
     private final Map<Long,MyCatBufferPage> map;
+
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
+
     private final Lock readLock = lock.readLock();
     private final Lock writeLock = lock.writeLock();
+
+    /**
+     * 异步线程
+     */
     private static final ExecutorService executorService
             = Executors.newCachedThreadPool();
+
     private final Set<Long> toDisk = new HashSet<Long>();
 
     public PageLRUCache() {
         map = new HashMap<Long,MyCatBufferPage>();
     }
 
+    /**
+     * 向Cache添加一个page，会触发Page Sweep操作
+     * @param key
+     * @param value
+     * @param ttlInMilliSeconds
+     */
     public void put(Long key, MyCatBufferPage value, long ttlInMilliSeconds) {
         Collection<MyCatBufferPage> values = null;
         try {
@@ -55,10 +70,17 @@ public class PageLRUCache {
         this.put(key, value, DEFAULT_TTL);
     }
 
+
+    /**
+     * 根据Page Index 得到对应的 Page
+     * 同时会设置该Page的访问时间，和引用计数+1
+     * @param key
+     * @return
+     */
     public MyCatBufferPage get(final Long key) {
         try {
             readLock.lock();
-           MyCatBufferPage value = map.get(key);
+            MyCatBufferPage value = map.get(key);
             if (value != null) {
                 value.getLastAccessedTimestamp().set(System.currentTimeMillis());
                 value.getRefCount().incrementAndGet();
@@ -68,6 +90,13 @@ public class PageLRUCache {
             readLock.unlock();
         }
     }
+
+    /**
+     * 将上次访问时间超过Cache TTL 和 引用数=0的Page
+     * 存放到collection中，供put调用时候，异步从内存
+     * 中刷到磁盘上
+     * @return
+     */
 
     private Collection<MyCatBufferPage> pageSweep() {
         Collection<MyCatBufferPage> values = null;
@@ -94,6 +123,11 @@ public class PageLRUCache {
         return values;
     }
 
+    /**
+     * 引用计数减1
+     * @param key
+     */
+
     public void release(final Long key) {
         try {
             readLock.lock();
@@ -106,6 +140,10 @@ public class PageLRUCache {
         }
     }
 
+    /**
+     * 缓存page的大小
+     * @return
+     */
     public int size() {
         try {
             readLock.lock();
@@ -115,6 +153,11 @@ public class PageLRUCache {
         }
     }
 
+
+    /**
+     * 将所有缓存在内存中Page 数据，刷到磁盘中去
+     * @throws IOException
+     */
     public void removeAll()  throws IOException {
         try {
             writeLock.lock();
@@ -131,6 +174,14 @@ public class PageLRUCache {
 
     }
 
+
+    /**
+     * 将index Page 数据，刷到磁盘中去
+     * @param key
+     * @return
+     * @throws IOException
+     */
+
     public MyCatBufferPage remove(final Long key) throws IOException {
         try {
             writeLock.lock();
@@ -144,6 +195,9 @@ public class PageLRUCache {
         }
     }
 
+
+
+
     public Collection<MyCatBufferPage> getValues() {
         try {
             readLock.lock();
@@ -153,6 +207,10 @@ public class PageLRUCache {
         }
     }
 
+
+    /**
+     * 异步操作task，负责将内存中的页数据，刷到磁盘中
+     */
     private static class Task implements Runnable {
         Collection<MyCatBufferPage> values;
         public Task(Collection<MyCatBufferPage> values) {

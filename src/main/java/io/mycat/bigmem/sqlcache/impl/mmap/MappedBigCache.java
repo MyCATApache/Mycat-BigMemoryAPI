@@ -49,7 +49,7 @@ public class MappedBigCache implements IBigCache{
     /**
      * 最小页文件大小
      */
-    public final static int MINIMUM_DATA_PAGE_SIZE = 32 * 1024 * 1024;
+    public final static int MINIMUM_DATA_PAGE_SIZE = 8 * 1024 * 1024;
 
     /**
      * 索引页在内存中停留时间
@@ -832,7 +832,7 @@ public class MappedBigCache implements IBigCache{
     }
 
     /**
-     * 从cache中移走
+     * 从cache中移走，并unmap操作
      * @throws IOException
      */
     public void recycle() throws IOException {
@@ -850,6 +850,23 @@ public class MappedBigCache implements IBigCache{
         } finally {
             queueWriteLock.unlock();
         }
+    }
+
+    /**
+     * reset front index = 0
+     */
+    public void reset(){
+        this.queueFrontIndex.set(0);
+        MyCatBufferPage metaDataPage = null;
+        try {
+            metaDataPage = this.metaPageFactory.acquirePage(META_DATA_PAGE_INDEX);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ByteBuffer metaDataBuf = metaDataPage.getLocalByteBuffer(0);
+        metaDataBuf.putLong(this.queueFrontIndex.get());
+        metaDataBuf.putLong(this.queueTailIndex.get());
+        metaDataPage.setDirty(true);
     }
 
     /**

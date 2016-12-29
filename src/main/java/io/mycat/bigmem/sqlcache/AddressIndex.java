@@ -4,7 +4,8 @@ import io.mycat.bigmem.util.UnsafeMemory;
 import sun.misc.Unsafe;
 
 /**
- * cache padding
+ * cache padding from disruptor
+ *
  * @author zagnix
  * @create 2016-11-18 10:17
  */
