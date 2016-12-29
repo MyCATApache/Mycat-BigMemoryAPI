@@ -52,7 +52,7 @@ public class MappedMemFileBufferPage extends MyCatBufferPage {
      * @param cacheTTL
      */
     public MappedMemFileBufferPage(MappedByteBuffer mappedByteBuffer, String file, long index, long cacheTTL){
-        super(mappedByteBuffer,cacheTTL);
+        super(mappedByteBuffer.load(),cacheTTL);
         this.pageName = file;
         this.pageIndex = index;
     }
