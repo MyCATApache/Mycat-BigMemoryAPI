@@ -4,15 +4,15 @@ import io.mycat.bigmem.buffer.MycatBufferBase;
 import io.mycat.bigmem.cacheway.MemoryAlloctorInf;
 import io.mycat.bigmem.cacheway.MycatMemoryAlloctorFactory;
 import io.mycat.bigmem.console.ChunkMemoryAllotEnum;
-import io.mycat.bigmem.console.MemoryAlloctorEnum;
+import io.mycat.bigmem.console.PropertiesKeyEnum;
 
 public class TestMycatBufferAllot {
 
     public static void main(String[] args) {
         MemoryAlloctorInf memoryAllot = MycatMemoryAlloctorFactory
-                .createMemoryAlloctor(MemoryAlloctorEnum.MEMORY_MYCAT_BUFFER_PAGE);
+                .createMemoryAlloctor();
 
-        // 优化使用可移动的直接内存，如果容量不够，可使用内存映射
+        // 优先使用可移动的直接内存，如果容量不够，可使用内存映射
         int allocFlag = ChunkMemoryAllotEnum.MEMORY_DIRECT_MOVE.getLevel()
                 + ChunkMemoryAllotEnum.MEMORY_MAPFILE.getLevel();
 
