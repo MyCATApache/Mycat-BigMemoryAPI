@@ -1,20 +1,12 @@
 package io.mycat.bigmem.cacheway.alloctor;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
-import io.mycat.bigmem.buffer.DirectMemAddressInf;
 import io.mycat.bigmem.buffer.MycatBufferBase;
 import io.mycat.bigmem.cacheway.MemoryAlloctorInf;
-import io.mycat.bigmem.cacheway.alloctor.directmem.DirectBufferPage;
 import io.mycat.bigmem.console.ChunkMemoryAllotEnum;
-import io.mycat.bigmem.console.LocatePolicy;
 
 /**
  * java 内存池的实现
@@ -57,11 +49,11 @@ public class MycatMemoryAlloctor implements MemoryAlloctorInf {
         }
 
         // 构建文件映射的相关初始化
-        ChunkMemoryAllotEnum.MEMORY_MAPFILE.getChunkAllot().allotorInit(msize * 1024, 4096, (short) 4);
+        ChunkMemoryAllotEnum.MEMORY_MAPFILE.getChunkAllot().allotorInit(msize * 128, 4096, (short) 1);
         // 可移动的内存文件块的构建
-        ChunkMemoryAllotEnum.MEMORY_DIRECT_MOVE.getChunkAllot().allotorInit(msize * 512, 4096, (short) 4);
+        ChunkMemoryAllotEnum.MEMORY_DIRECT_MOVE.getChunkAllot().allotorInit(msize * 256, 4096, (short) 1);
         // 进行不可移动的内存块的构建
-        ChunkMemoryAllotEnum.MEMORY_DIRECT.getChunkAllot().allotorInit(msize * 1024, 4096, (short) 4);
+        ChunkMemoryAllotEnum.MEMORY_DIRECT.getChunkAllot().allotorInit(msize * 16, 4096, (short) 1);
     }
 
     /**
@@ -80,7 +72,6 @@ public class MycatMemoryAlloctor implements MemoryAlloctorInf {
                 // 检查是否有当前的级别
                 if ((chunkMemoryAllotEnum.getLevel() & allocFlag) == chunkMemoryAllotEnum.getLevel()) {
                     chunkAllot = chunkMemoryAllotEnum;
-                    index = chunkMemoryAllotEnum.getMoveBit();
                     break;
                 }
             } else {
@@ -88,58 +79,11 @@ public class MycatMemoryAlloctor implements MemoryAlloctorInf {
                 if (chunkMemoryAllotEnum.getMoveBit() < index
                         && (chunkMemoryAllotEnum.getLevel() & allocFlag) == chunkMemoryAllotEnum.getLevel()) {
                     chunkAllot = chunkMemoryAllotEnum;
-                    index = chunkMemoryAllotEnum.getMoveBit();
                 }
             }
         }
 
         return chunkAllot;
-    }
-
-    public static void main(String[] args) {
-
-        Set<ChunkMemoryAllotEnum> MEMORY_LEVEL = new TreeSet<>((o1, o2) -> {
-            if (o1.getLevel() < o2.getLevel()) {
-                return 1;
-            } else if (o1.getLevel() > o2.getLevel()) {
-                return -1;
-            }
-            return 0;
-        });
-
-        for (int i = 0; i < ChunkMemoryAllotEnum.values().length; i++) {
-            MEMORY_LEVEL.add(ChunkMemoryAllotEnum.values()[i]);
-        }
-
-        int level = 3;
-
-        int index = 0;
-
-        // for (ChunkMemoryAllotEnum chunkMemoryAllotEnum : MEMORY_LEVEL) {
-        // if ((chunkMemoryAllotEnum.getLevel() & level) ==
-        // chunkMemoryAllotEnum.getLevel()) {
-        // System.out.println("第一次的级别:" + chunkMemoryAllotEnum.getLevel());
-        // index = chunkMemoryAllotEnum.getMoveBit();
-        // break;
-        // }
-        //
-        // }
-
-        for (ChunkMemoryAllotEnum chunkMemoryAllotEnum : MEMORY_LEVEL) {
-            if (index == 0) {
-                if ((chunkMemoryAllotEnum.getLevel() & level) == chunkMemoryAllotEnum.getLevel()) {
-                    System.out.println("第2次的级别:" + chunkMemoryAllotEnum.getLevel());
-                    index = chunkMemoryAllotEnum.getMoveBit();
-                }
-            } else {
-                if (chunkMemoryAllotEnum.getMoveBit() < index
-                        && (chunkMemoryAllotEnum.getLevel() & level) == chunkMemoryAllotEnum.getLevel()) {
-                    System.out.println("第2次的级别:" + chunkMemoryAllotEnum.getLevel());
-                    index = chunkMemoryAllotEnum.getMoveBit();
-                }
-            }
-
-        }
     }
 
     /**
@@ -151,7 +95,7 @@ public class MycatMemoryAlloctor implements MemoryAlloctorInf {
     */
     public MycatBufferBase allocMem(int allocFlag, int size) {
 
-        MycatBufferBase result = null;
+        MycatBufferBase mycatBuffer = null;
 
         // 首次为0匹配上最想要的内存
         int index = 0;
@@ -159,14 +103,16 @@ public class MycatMemoryAlloctor implements MemoryAlloctorInf {
         ChunkMemoryAllotEnum allot = null;
         while ((allot = this.memoryMatchlevel(allocFlag, index)) != null) {
             // 进行内存分配
-            result = allot.getChunkAllot().allocMem(size);
-            if (result == null) {
+            mycatBuffer = allot.getChunkAllot().allocMem(size);
+            if (mycatBuffer == null) {
+                index = allot.getMoveBit();
                 continue;
             } else {
                 break;
             }
         }
-        return result;
+
+        return mycatBuffer;
     }
 
     /**
@@ -176,8 +122,19 @@ public class MycatMemoryAlloctor implements MemoryAlloctorInf {
     * @创建日期 2016年12月19日
     */
     public void recyleMem(MycatBufferBase buffer) {
+        if (null != buffer) {
+            for (ChunkMemoryAllotEnum chunkMemoryAllotEnum : MEMORY_LEVEL) {
+                boolean rcyle = chunkMemoryAllotEnum.getChunkAllot().recyleMem(buffer);
 
-        // 明确内存的分配方式进行归还操作
+                // 如果已经回收，则停止遍历
+                if (rcyle) {
+                    break;
+                }
+            }
+
+            // 进行内存的回收操作
+            // buffer.getMemoryAllotEnum().getChunkAllot().recyleMem(buffer.getMycatBuffer());
+        }
     }
 
 }
