@@ -158,4 +158,18 @@ public abstract class MycatBufferBase implements MycatBuffer, DirectMemAddressIn
         return this.att;
     }
 
+    /**
+     * 内存可以被管理器移动，首次访问（一个begin & commit操作之后）之前，
+     * 用户需要先要调用beginOp()，即完整用法如下   
+     *  Buf.beginOp();   
+     *   Read or write    
+     *   Buf.commitOp();    
+     */
+    public abstract void beginOp();
+
+    /**
+     * 当前操作完成，事要进行内存整理
+     */
+    public abstract void commitOp();
+
 }
