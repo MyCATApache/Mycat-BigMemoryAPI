@@ -1,6 +1,7 @@
 package io.mycat.bigmem.cacheway;
 
-import io.mycat.bigmem.console.MemoryAlloctorEnum;
+import io.mycat.bigmem.console.PropertiesKeyEnum;
+import io.mycat.bigmem.util.PropertiesUtils;
 
 /**
  * 内存分配器工厂接口
@@ -15,34 +16,36 @@ import io.mycat.bigmem.console.MemoryAlloctorEnum;
 */
 public class MycatMemoryAlloctorFactory {
 
-	/**
-	 * 创建内存分配器对象
-	* 方法描述
-	* @param flag 分配的标识信息
-	* @return
-	* @创建日期 2016年12月28日
-	*/
-	public static MemoryAlloctorInf createMemoryAlloctor(MemoryAlloctorEnum alloct) {
+    /**
+     * 创建内存分配器对象
+    * 方法描述
+    * @param flag 分配的标识信息
+    * @return
+    * @创建日期 2016年12月28日
+    */
+    public static MemoryAlloctorInf createMemoryAlloctor() {
 
-		// 进行对象的构建
-		if (null != alloct) {
-			try {
-				Class<?> alloctorClass = Class.forName(alloct.getClassFile());
+        try {
+            // 获得内存分配的配制信息
+            String allotClass = PropertiesUtils.getInstance()
+                    .getValue(PropertiesKeyEnum.MYCAT_MEMORY_ALLOT_CLASS.getKey());
+            // 加载文件信息
+            Class<?> alloctorClass = Class.forName(allotClass);
 
-				MemoryAlloctorInf alloctObject = (MemoryAlloctorInf) alloctorClass.newInstance();
+            // 生成对象
+            MemoryAlloctorInf alloctObject = (MemoryAlloctorInf) alloctorClass.newInstance();
 
-				return alloctObject;
+            return alloctObject;
 
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-		}
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 }
