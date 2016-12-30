@@ -31,9 +31,9 @@ public interface ChunkMemoryAllotInf {
      * 进行缓存空间的部分释放，即释放buffer的limit与capacity之间的空间释放
      * 方法描述
      * @param buffer
-     * @return
+     * @return 返回是否为当前的chunk所回收
      * @创建日期 2016年12月20日
      */
-    public void recyleMem(MycatBufferBase buffer);
+    public boolean recyleMem(MycatBufferBase buffer);
 
 }

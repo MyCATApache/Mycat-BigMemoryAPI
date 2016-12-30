@@ -1,8 +1,5 @@
 package io.mycat.bigmem.cacheway;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import io.mycat.bigmem.console.MemoryAlloctorEnum;
 
 /**
@@ -18,34 +15,34 @@ import io.mycat.bigmem.console.MemoryAlloctorEnum;
 */
 public class MycatMemoryAlloctorFactory {
 
-    /**
-     * 创建内存分配器对象
-    * 方法描述
-    * @param flag 分配的标识信息
-    * @return
-    * @创建日期 2016年12月28日
-    */
-    public MemoryAlloctorInf createMemoryAlloctor(MemoryAlloctorEnum alloct) {
+	/**
+	 * 创建内存分配器对象
+	* 方法描述
+	* @param flag 分配的标识信息
+	* @return
+	* @创建日期 2016年12月28日
+	*/
+	public static MemoryAlloctorInf createMemoryAlloctor(MemoryAlloctorEnum alloct) {
 
-        // 进行对象的构建
-        if (null != alloct) {
-            try {
-                Class<?> alloctorClass = Class.forName(alloct.getClassFile());
+		// 进行对象的构建
+		if (null != alloct) {
+			try {
+				Class<?> alloctorClass = Class.forName(alloct.getClassFile());
 
-                MemoryAlloctorInf alloctObject = (MemoryAlloctorInf) alloctorClass.newInstance();
+				MemoryAlloctorInf alloctObject = (MemoryAlloctorInf) alloctorClass.newInstance();
 
-                return alloctObject;
+				return alloctObject;
 
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
 }
