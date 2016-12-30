@@ -22,7 +22,6 @@ import sun.misc.Unsafe;
 * 文件描述：TODO
 * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
 */
-@SuppressWarnings("restriction")
 public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatMovableBufer {
 
     /**
@@ -44,6 +43,16 @@ public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatM
     private Semaphore accessReq = new Semaphore(1);
 
     /**
+     * 使用的内存的开始索引号
+     */
+    private int memStartPosition;
+
+    /**
+     * 使用的内存的结束的索引号
+     */
+    private int memEndPosition;
+
+    /**
      * 构造方法，进行内存容量的分配操作
     * 构造方法
     * @param memorySize 内存容量信息
@@ -61,7 +70,8 @@ public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatM
         this.capacity = memorySize;
     }
 
-    public DirectMycatBufferMoveImpl(DirectMycatBufferMoveImpl dirbuffer, int position, int limit, long address) {
+    public DirectMycatBufferMoveImpl(DirectMycatBufferMoveImpl dirbuffer, int position, int limit, long address,
+            int memStartPosition, int memEndPosition) {
         this.putPosition = position;
         this.limit = limit;
         // 设置容量
@@ -69,6 +79,10 @@ public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatM
         this.address = address;
         this.att = dirbuffer;
         this.unsafe = dirbuffer.unsafe;
+        // 开始的索引号
+        this.memStartPosition = memStartPosition;
+        // 结束的索引号
+        this.memEndPosition = memEndPosition;
     }
 
     private long getIndex(long offset) {
@@ -129,7 +143,7 @@ public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatM
         int cap = this.limit - currPosition;
         long address = this.address + currPosition;
         // 生新新的引用对象
-        return new DirectMycatBufferMoveImpl(this, 0, cap, address);
+        return new DirectMycatBufferMoveImpl(this, 0, cap, address, this.getPosition, this.limit);
     }
 
     /**
@@ -210,8 +224,50 @@ public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatM
     }
 
     @Override
+    public void limit(int limit) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        this.limit = limit;
+    }
+
+    @Override
+    public void putPosition(int position) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        this.putPosition = position;
+    }
+
+    public void getPosition(int getPosition) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        this.getPosition = getPosition;
+    }
+
+    @Override
     public boolean getClearFlag() {
         return this.clearFlag;
+    }
+
+    public int getMemStartPosition() {
+        return memStartPosition;
+    }
+
+    public void setMemStartPosition(int memStartPosition) {
+        this.memStartPosition = memStartPosition;
+    }
+
+    public int getMemEndPosition() {
+        return memEndPosition;
+    }
+
+    public void setMemEndPosition(int memEndPosition) {
+        this.memEndPosition = memEndPosition;
     }
 
 }

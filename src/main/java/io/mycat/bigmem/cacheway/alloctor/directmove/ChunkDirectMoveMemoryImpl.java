@@ -76,6 +76,9 @@ public class ChunkDirectMoveMemoryImpl implements ChunkMemoryAllotInf {
 
             if (buffer.limit() < buffer.capacity()) {
 
+                // 转换成原始的移动对象
+                DirectMycatBufferMoveImpl directMoveMemory = (DirectMycatBufferMoveImpl) buffer;
+
                 // 计算chunk归还的数量
                 int chunkNum = (int) (buffer.capacity() - buffer.limit()) / CHUNK_SIZE;
 
@@ -94,6 +97,14 @@ public class ChunkDirectMoveMemoryImpl implements ChunkMemoryAllotInf {
                 for (DirectMoveBufferPage pageMemory : POOL) {
                     if ((recyProc = pageMemory.recycleBuffer((MycatBufferBase) parentBuf, startChunk,
                             chunkNum)) == true) {
+
+                        // 标识开始与结束号
+                        int startIndex = startChunk * CHUNK_SIZE;
+                        int end = directMoveMemory.getMemEndPosition() - chunkNum * CHUNK_SIZE;
+
+                        directMoveMemory.setMemStartPosition(startIndex);
+                        directMoveMemory.setMemEndPosition(end);
+
                         break;
                     }
                 }

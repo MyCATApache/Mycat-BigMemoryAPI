@@ -33,7 +33,6 @@ import sun.nio.ch.FileChannelImpl;
 * 文件描述：TODO
 * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
 */
-@SuppressWarnings("restriction")
 public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer, MycatMovableBufer {
 
     /**
@@ -434,12 +433,30 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer,
         return fileSize;
     }
 
-    /**
-     * 设置文件大小的方法
-     * @param fileSize
-     */
-    public void setFileSize(int fileSize) {
-        this.fileSize = fileSize;
+    @Override
+    public void limit(int limit) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        this.limit = limit;
+    }
+
+    @Override
+    public void putPosition(int position) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        this.putPosition = position;
+    }
+
+    public void getPosition(int getPosition) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        this.getPosition = getPosition;
     }
 
 }

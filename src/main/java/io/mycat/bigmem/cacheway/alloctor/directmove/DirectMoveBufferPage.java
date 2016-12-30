@@ -179,9 +179,9 @@ public class DirectMoveBufferPage {
     /**
     * 进行内存的归还操作，以便后面再使用
     * 方法描述
-    * @param parentBuffer
-    * @param chunkStart
-    * @param chunkNum
+    * @param parentBuffer 内存页信息
+    * @param chunkStart 开始块的号
+    * @param chunkNum 归还的数量
     * @创建日期 2016年12月19日
     */
     public boolean recycleBuffer(MycatBufferBase parentBuffer, int chunkStart, int chunkNum) {

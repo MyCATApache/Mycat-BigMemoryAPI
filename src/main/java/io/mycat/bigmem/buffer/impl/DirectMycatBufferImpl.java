@@ -19,7 +19,6 @@ import sun.misc.Unsafe;
 * 文件描述：TODO
 * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
 */
-@SuppressWarnings("restriction")
 public class DirectMycatBufferImpl extends MycatBufferBase {
 
     /**
@@ -139,6 +138,16 @@ public class DirectMycatBufferImpl extends MycatBufferBase {
     public byte get() {
 
         return unsafe.getByte(getIndex(this.addGetPos()));
+
+    }
+
+    @Override
+    public void beginOp() {
+
+    }
+
+    @Override
+    public void commitOp() {
 
     }
 
