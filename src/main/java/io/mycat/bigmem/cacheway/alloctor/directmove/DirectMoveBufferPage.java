@@ -1,4 +1,4 @@
-package io.mycat.bigmem.cacheway.alloctor;
+package io.mycat.bigmem.cacheway.alloctor.directmove;
 
 import java.util.BitSet;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -17,7 +17,7 @@ import io.mycat.bigmem.buffer.MycatMovableBufer;
 * 文件描述：TODO
 * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
 */
-public class BufferPage {
+public class DirectMoveBufferPage {
 
     /**
      * 操作的buffer信息
@@ -44,12 +44,6 @@ public class BufferPage {
     private final BitSet memUseSet;
 
     /**
-     * 内存过期时间的的map
-    * @字段说明 timeOutMap
-    */
-    private final long[] timeOutArrays;
-
-    /**
     * 是否锁定标识
     * @字段说明 isLock
     */
@@ -66,7 +60,7 @@ public class BufferPage {
     * @param memorySize
     * @param chunkSize
     */
-    public BufferPage(MycatBufferBase buffer, int chunkSize) {
+    public DirectMoveBufferPage(MycatBufferBase buffer, int chunkSize) {
         this.buffer = buffer;
         // 设置chunk的大小
         this.chunkSize = chunkSize;
@@ -76,13 +70,6 @@ public class BufferPage {
         this.memUseSet = new BitSet(this.chunkCount);
         // 默认可使用的chunk数量为总的chunk数
         this.canUseChunkNum = chunkCount;
-        // 初始将chunk块的过期时间初始化
-        this.timeOutArrays = new long[this.chunkCount];
-
-        // 设置默认的过期时间
-        for (int i = 0; i < this.chunkCount; i++) {
-            timeOutArrays[i] = 0l;
-        }
 
     }
 
@@ -109,7 +96,7 @@ public class BufferPage {
     * @return
     * @创建日期 2016年12月19日
     */
-    public MycatBufferBase alloactionMemory(int needChunkSize, long timeOut) {
+    public MycatBufferBase alloactionMemory(int needChunkSize) {
         // 如果当前的可分配的内在块小于需要内存块，则返回
         if (canUseChunkNum < needChunkSize) {
             return null;
@@ -153,30 +140,30 @@ public class BufferPage {
                 int needChunkEnd = startIndex + needChunkSize;
                 memUseSet.set(startIndex, needChunkEnd);
 
-                // 在进行数据写入之前，
+                MycatMovableBufer moveBuffer = null;
 
-                // 标识数据不能被内存所整理
-                buffer.beginOp();
+                // 检查当前对象是否实现了可移动接口
+                if (buffer instanceof MycatMovableBufer) {
+                    moveBuffer = (MycatMovableBufer) buffer;
 
-                // 标识开始与结束号
-                buffer.getPosition(startIndex * chunkSize);
-                buffer.limit(needChunkEnd * chunkSize);
+                    // 标识为不可移动
+                    moveBuffer.beginOp();
 
-                // 进行数据进行匹配分段操作
-                MycatBufferBase bufferResult = buffer.slice();
+                    // 标识开始与结束号
+                    buffer.getPosition(startIndex * chunkSize);
+                    buffer.limit(needChunkEnd * chunkSize);
 
-                // 当前可使用的，为之前的结果前去当前的需要的，
-                canUseChunkNum = canUseChunkNum - needChunkSize;
+                    // 进行数据进行匹配分段操作
+                    MycatBufferBase bufferResult = buffer.slice();
 
-                // 设置过期时间
-                for (int i = startIndex; i < needChunkEnd; i++) {
-                    timeOutArrays[i] = timeOut;
+                    // 当前可使用的，为之前的结果前去当前的需要的，
+                    canUseChunkNum = canUseChunkNum - needChunkSize;
+
+                    // 标识当前操作完成
+                    moveBuffer.commitOp();
+
+                    return bufferResult;
                 }
-
-                // 提交当前的操作，以允许内存的整理
-                buffer.commitOp();
-
-                return bufferResult;
 
             } else {
                 return null;
@@ -185,6 +172,8 @@ public class BufferPage {
         } finally {
             isLock.set(false);
         }
+
+        return null;
     }
 
     /**
@@ -195,7 +184,7 @@ public class BufferPage {
     * @param chunkNum
     * @创建日期 2016年12月19日
     */
-    public boolean recycleBuffer(MycatMovableBufer parentBuffer, int chunkStart, int chunkNum) {
+    public boolean recycleBuffer(MycatBufferBase parentBuffer, int chunkStart, int chunkNum) {
         if (this.buffer == parentBuffer) {
             // 如果加锁失败，则执行其他代码
             if (!isLock.compareAndSet(false, true)) {
@@ -206,11 +195,6 @@ public class BufferPage {
                 int endChunkNum = chunkStart + chunkNum;
                 // 将当前指定的内存块归还
                 memUseSet.clear(chunkStart, endChunkNum);
-
-                // 将过期时间置0.
-                for (int i = chunkStart; i < endChunkNum; i++) {
-                    timeOutArrays[i] = 0l;
-                }
 
                 // 归还了内存，则需要将可使用的内存加上归还的内存
                 this.canUseChunkNum = canUseChunkNum + chunkNum;

@@ -2,11 +2,9 @@ package io.mycat.bigmem.buffer.impl;
 
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
-import java.util.concurrent.Semaphore;
 
 import io.mycat.bigmem.buffer.MycatBuffer;
 import io.mycat.bigmem.buffer.MycatBufferBase;
-import io.mycat.bigmem.console.BufferException;
 import io.mycat.bigmem.util.UnsafeHelper;
 import sun.misc.Unsafe;
 
@@ -31,33 +29,21 @@ public class DirectMycatBufferImpl extends MycatBufferBase {
     private Unsafe unsafe;
 
     /**
-     * 是否进行内存整理标识,默认为true，即允许进行整理
-    * @字段说明 clearFlag
-    */
-    private volatile boolean clearFlag = true;
-
-    /**
-     * 用来控制队列的访问，同一时间，不能被多个线程同同时操作队列
-    * @字段说明 lock
-    */
-    private Semaphore accessReq = new Semaphore(1);
-
-    /**
      * 构造方法，进行内存容量的分配操作
     * 构造方法
-    * @param moneySize
+    * @param memorySize 内存容量信息
     */
-    public DirectMycatBufferImpl(int moneySize) {
+    public DirectMycatBufferImpl(int memorySize) {
         // // 获得首地址信息
         unsafe = UnsafeHelper.getUnsafe();
         // 进行内存分配
-        address = unsafe.allocateMemory(moneySize);
+        address = unsafe.allocateMemory(memorySize);
         // 设置所有的内存地址都为0
-        unsafe.setMemory(address, moneySize, (byte) 0);
+        unsafe.setMemory(address, memorySize, (byte) 0);
         // 设置limit以及空量信息
-        this.limit = moneySize;
+        this.limit = memorySize;
         // 设置容量
-        this.capacity = moneySize;
+        this.capacity = memorySize;
     }
 
     public DirectMycatBufferImpl(DirectMycatBufferImpl dirbuffer, int position, int limit, long address) {
@@ -79,17 +65,11 @@ public class DirectMycatBufferImpl extends MycatBufferBase {
     @Override
     public void setByte(int offset, byte value) {
 
-        // 验证当前是否在进行内存整理
-        checkClearFlag();
-
         unsafe.putByte(getIndex(offset), value);
     }
 
     @Override
     public byte getByte(int offset) {
-
-        // 验证当前是否在进行内存整理
-        checkClearFlag();
 
         // 仅允许同一线程操作
         return unsafe.getByte(getIndex(offset));
@@ -97,9 +77,6 @@ public class DirectMycatBufferImpl extends MycatBufferBase {
 
     @Override
     public void copyTo(ByteBuffer buffer) {
-
-        // 验证当前是否在进行内存整理
-        checkClearFlag();
 
         if (buffer.capacity() < this.limit) {
             throw new BufferOverflowException();
@@ -112,17 +89,12 @@ public class DirectMycatBufferImpl extends MycatBufferBase {
 
     @Override
     public void recycleUnuse() {
-        // 验证当前是否在进行内存整理
-        checkClearFlag();
         // 修改当前的标识
         this.limit = this.putPosition;
     }
 
     @Override
     public MycatBufferBase slice() {
-
-        // 验证当前是否在进行内存整理
-        checkClearFlag();
 
         int currPosition = this.getPosition;
         int cap = this.limit - currPosition;
@@ -158,9 +130,6 @@ public class DirectMycatBufferImpl extends MycatBufferBase {
     @Override
     public MycatBuffer putByte(byte b) {
 
-        // 验证当前内存整理标识
-        checkClearFlag();
-
         unsafe.putByte(getIndex(this.addPutPos()), b);
 
         return this;
@@ -169,48 +138,8 @@ public class DirectMycatBufferImpl extends MycatBufferBase {
     @Override
     public byte get() {
 
-        // 验证当前内存整理标识
-        checkClearFlag();
-
         return unsafe.getByte(getIndex(this.addGetPos()));
 
-    }
-
-    /**
-     * 进行内存整理的标识验证
-    * 方法描述
-    * @创建日期 2016年12月27日
-    */
-    private void checkClearFlag() {
-        // 仅当不进行整理时，才能进行操作
-        if (clearFlag) {
-            throw new BufferException("DirectMycatBufferImpl exception,please invoke beginOp");
-        }
-    }
-
-    @Override
-    public void beginOp() {
-        try {
-            accessReq.acquire();
-            // 标识当前正在进行内存操作，不能整理内存
-            clearFlag = false;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
-    public void commitOp() {
-        // 内存整理完毕可以进行内存整理
-        clearFlag = true;
-        // 访问结束，释放语可
-        accessReq.release();
-    }
-
-    @Override
-    public boolean getClearFlag() {
-        return this.clearFlag;
     }
 
 }

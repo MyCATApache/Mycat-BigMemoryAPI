@@ -44,7 +44,7 @@ public interface MycatSwapBufer {
     * @param notify
     * @创建日期 2016年12月22日
     */
-    public void swapIn(MyCatCallbackInf notify) throws IOException;
+    public void swapIn(CatCallbackInf notify) throws IOException;
 
     /**
      *  与commitOp操作类型，标识结束,完成调用回调通知函数
@@ -52,6 +52,6 @@ public interface MycatSwapBufer {
     * @param notify
     * @创建日期 2016年12月22日
     */
-    public void swapOut(MyCatCallbackInf notify);
+    public void swapOut(CatCallbackInf notify);
 
 }
