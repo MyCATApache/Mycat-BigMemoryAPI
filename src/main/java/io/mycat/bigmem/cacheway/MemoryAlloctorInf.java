@@ -1,5 +1,7 @@
 package io.mycat.bigmem.cacheway;
 
+import io.mycat.bigmem.buffer.MycatBufferBase;
+
 /**
  * 整体的内存的分配接口
  * @author liujun
@@ -15,7 +17,7 @@ public interface MemoryAlloctorInf {
 	* @return
 	* @创建日期 2016年12月20日
 	*/
-	public MemoryAllotRestult allocMem(int allocFlag, int size);
+	public MycatBufferBase allocMem(int allocFlag, int size);
 
 	/**
 	 * 进行缓存空间的部分释放，即释放buffer的limit与capacity之间的空间释放
@@ -24,6 +26,6 @@ public interface MemoryAlloctorInf {
 	 * @return
 	 * @创建日期 2016年12月20日
 	 */
-	public void recyleMem(MemoryAllotRestult bufer);
+	public void recyleMem(MycatBufferBase bufer);
 
 }
