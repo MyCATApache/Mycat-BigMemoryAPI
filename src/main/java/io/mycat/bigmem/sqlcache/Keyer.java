@@ -1,5 +1,7 @@
 package io.mycat.bigmem.sqlcache;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * key cache生效规则
  *
@@ -9,14 +11,19 @@ package io.mycat.bigmem.sqlcache;
  */
 
 public class Keyer<K,V> {
-    private long cacheTTL;
-    private long lastAccessTime;
-    private long  refCount;
+    private long cacheTTL=0;
+    private long lastAccessTime=0;
+
+    /**
+     * TTL 时间内访问次数
+     */
+    private long accessCount=0;
+    private AtomicLong refCount = new AtomicLong(0);
     private  K key;
     private  V value;
 
-    private IDataLoader<K,V> iDataLoader;
-    private RemoveKeyListener<K,V> removeKeyListener;
+    private IDataLoader<K,V> iDataLoader = null;
+    private IRemoveKeyListener<K,V> removeKeyListener = null;
 
     public long getCacheTTL() {
         return cacheTTL;
@@ -34,11 +41,11 @@ public class Keyer<K,V> {
         this.lastAccessTime = lastAccessTime;
     }
 
-    public long getRefCount() {
+    public AtomicLong getRefCount() {
         return refCount;
     }
 
-    public void setRefCount(long refCount) {
+    public void setRefCount(AtomicLong refCount) {
         this.refCount = refCount;
     }
 
@@ -66,11 +73,19 @@ public class Keyer<K,V> {
         this.iDataLoader = iDataLoader;
     }
 
-    public RemoveKeyListener<K, V> getRemoveKeyListener() {
+    public IRemoveKeyListener<K, V> getRemoveKeyListener() {
         return removeKeyListener;
     }
 
-    public void setRemoveKeyListener(RemoveKeyListener<K, V> removeKeyListener) {
+    public void setRemoveKeyListener(IRemoveKeyListener<K, V> removeKeyListener) {
         this.removeKeyListener = removeKeyListener;
+    }
+
+    public long getAccessCount() {
+        return accessCount;
+    }
+
+    public void setAccessCount(long accessCount) {
+        this.accessCount = accessCount;
     }
 }

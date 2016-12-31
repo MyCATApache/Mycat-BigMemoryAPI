@@ -1,7 +1,5 @@
 package io.mycat.bigmem.sqlcache;
 
-import java.util.concurrent.Callable;
-
 /**
  * 定制化 Cache接口
  * 主要实现SQL结果集缓存规则
@@ -15,25 +13,18 @@ public interface ICache<K, V> {
 
     /**
      *
-     *
      * @param key
      * @param value
+     * @param keyer
      */
-    public void put(final K key,final V value,final long ttl);
-    /**
-     *
-     * @param key
-     * @param value
-     */
-    public void put(final K key,final V value);
-
+    public void put(final K key,final V value,final Keyer<K,V> keyer);
 
     /**
      *
      * @param key
-     * @param callable
+     * @return
      */
-    public void get(final K key,Callable<? extends V> callable);
+    public V get(final K key);
 
 
     /**

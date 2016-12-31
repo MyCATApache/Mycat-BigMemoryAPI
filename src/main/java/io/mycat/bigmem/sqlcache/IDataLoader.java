@@ -17,7 +17,7 @@ public interface IDataLoader<K,V>{
     public V load(K key);
 
     /**
-     * Key失效，时候重新reload数据
+     * Key失效，时候重新异步reload数据
      * @param key
      * @return
      */

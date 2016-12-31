@@ -7,7 +7,7 @@ package io.mycat.bigmem.sqlcache;
  * @version 1.0
  * @create 2016-12-30 16:47
  */
-public interface RemoveKeyListener<K,V> {
+public interface IRemoveKeyListener<K,V> {
 
     /**
      * 当Key被移除时，回调该接口

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="1084.9375" y="1800.0">io.mycat.bigmem.sqlcache.impl.directmem.DirectMemorySQLResult</node>
+    <node x="0.0" y="731.0">io.mycat.bigmem.sqlcache.PageLRUCache</node>
+    <node x="1103.875" y="1194.0">io.mycat.bigmem.sqlcache.ISQLResult</node>
+    <node x="1388.625" y="757.0">io.mycat.bigmem.sqlcache.IBufferPageFactory</node>
+    <node x="363.5625000000001" y="294.0">io.mycat.bigmem.sqlcache.MyCatBufferPage</node>
+    <node x="1507.875" y="1233.0">io.mycat.bigmem.sqlcache.impl.directmem.DirectMemoryFactory</node>
+    <node x="485.9375000000001" y="1644.0">io.mycat.bigmem.sqlcache.impl.mmap.MappedSQLResult</node>
+    <node x="367.5625000000001" y="0.0">io.mycat.bigmem.sqlcache.IBufferPage</node>
+    <node x="573.0" y="692.0">io.mycat.bigmem.sqlcache.impl.mmap.MappedMemFileBufferPage</node>
+    <node x="945.0625000000001" y="2302.0">io.mycat.bigmem.sqlcache.BigSQLResult</node>
+    <node x="271.625" y="1090.0">io.mycat.bigmem.sqlcache.impl.mmap.MappedBufferPageFactory</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="io.mycat.bigmem.sqlcache.impl.mmap.MappedBufferPageFactory" target="io.mycat.bigmem.sqlcache.PageLRUCache">
+      <point x="-87.125" y="-252.0" />
+      <point x="533.0" y="1065.0" />
+      <point x="414.75" y="1065.0" />
+      <point x="138.25" y="135.0" />
+    </edge>
+    <edge source="io.mycat.bigmem.sqlcache.impl.directmem.DirectMemoryFactory" target="io.mycat.bigmem.sqlcache.IBufferPageFactory">
+      <point x="0.0" y="-109.0" />
+      <point x="119.25" y="109.0" />
+    </edge>
+    <edge source="io.mycat.bigmem.sqlcache.impl.mmap.MappedMemFileBufferPage" target="io.mycat.bigmem.sqlcache.MyCatBufferPage">
+      <point x="0.0" y="-174.0" />
+      <point x="825.5" y="667.0" />
+      <point x="688.3125000000001" y="667.0" />
+      <point x="108.25" y="174.0" />
+    </edge>
+    <edge source="io.mycat.bigmem.sqlcache.PageLRUCache" target="io.mycat.bigmem.sqlcache.MyCatBufferPage">
+      <point x="0.0" y="-135.0" />
+      <point x="276.5" y="667.0" />
+      <point x="471.8125000000001" y="667.0" />
+      <point x="-108.25" y="174.0" />
+    </edge>
+    <edge source="io.mycat.bigmem.sqlcache.impl.directmem.DirectMemorySQLResult" target="io.mycat.bigmem.sqlcache.ISQLResult">
+      <point x="0.0" y="-148.0" />
+      <point x="1276.9375" y="1619.0" />
+      <point x="1295.875" y="1619.0" />
+      <point x="0.0" y="148.0" />
+    </edge>
+    <edge source="io.mycat.bigmem.sqlcache.BigSQLResult" target="io.mycat.bigmem.sqlcache.ISQLResult">
+      <point x="96.0" y="-148.0" />
+      <point x="1233.0625" y="2277.0" />
+      <point x="1479.4375" y="2277.0" />
+      <point x="1479.4375" y="1619.0" />
+      <point x="1423.875" y="1619.0" />
+      <point x="128.0" y="148.0" />
+    </edge>
+    <edge source="io.mycat.bigmem.sqlcache.impl.mmap.MappedBufferPageFactory" target="io.mycat.bigmem.sqlcache.IBufferPageFactory">
+      <point x="261.375" y="-252.0" />
+      <point x="881.5" y="1065.0" />
+      <point x="1507.875" y="1065.0" />
+      <point x="-119.25" y="109.0" />
+    </edge>
+    <edge source="io.mycat.bigmem.sqlcache.BigSQLResult" target="io.mycat.bigmem.sqlcache.impl.mmap.MappedSQLResult">
+      <point x="-96.0" y="-148.0" />
+      <point x="1041.0625" y="2277.0" />
+      <point x="775.4375000000001" y="2277.0" />
+      <point x="0.0" y="304.0" />
+    </edge>
+    <edge source="io.mycat.bigmem.sqlcache.MyCatBufferPage" target="io.mycat.bigmem.sqlcache.IBufferPage">
+      <point x="0.0" y="-174.0" />
+      <point x="0.0" y="122.0" />
+    </edge>
+    <edge source="io.mycat.bigmem.sqlcache.impl.mmap.MappedSQLResult" target="io.mycat.bigmem.sqlcache.impl.mmap.MappedBufferPageFactory">
+      <point x="-193.0" y="-304.0" />
+      <point x="582.4375000000001" y="1619.0" />
+      <point x="445.875" y="1619.0" />
+      <point x="-174.25" y="252.0" />
+    </edge>
+    <edge source="io.mycat.bigmem.sqlcache.impl.mmap.MappedSQLResult" target="io.mycat.bigmem.sqlcache.ISQLResult">
+      <point x="193.0" y="-304.0" />
+      <point x="968.4375000000001" y="1619.0" />
+      <point x="1167.875" y="1619.0" />
+      <point x="-128.0" y="148.0" />
+    </edge>
+    <edge source="io.mycat.bigmem.sqlcache.impl.mmap.MappedBufferPageFactory" target="io.mycat.bigmem.sqlcache.impl.mmap.MappedMemFileBufferPage">
+      <point x="87.125" y="-252.0" />
+      <point x="707.25" y="1065.0" />
+      <point x="825.5" y="1065.0" />
+      <point x="0.0" y="174.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="380.0" y="980.5" />
+  <SelectedNodes>
+    <node>io.mycat.bigmem.sqlcache.impl.directmem.DirectMemorySQLResult</node>
+    <node>io.mycat.bigmem.sqlcache.PageLRUCache</node>
+    <node>io.mycat.bigmem.sqlcache.ISQLResult</node>
+    <node>io.mycat.bigmem.sqlcache.IBufferPageFactory</node>
+    <node>io.mycat.bigmem.sqlcache.MyCatBufferPage</node>
+    <node>io.mycat.bigmem.sqlcache.impl.directmem.DirectMemoryFactory</node>
+    <node>io.mycat.bigmem.sqlcache.impl.mmap.MappedSQLResult</node>
+    <node>io.mycat.bigmem.sqlcache.IBufferPage</node>
+    <node>io.mycat.bigmem.sqlcache.impl.mmap.MappedBufferPageFactory</node>
+    <node>io.mycat.bigmem.sqlcache.impl.mmap.MappedMemFileBufferPage</node>
+    <node>io.mycat.bigmem.sqlcache.BigSQLResult</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
