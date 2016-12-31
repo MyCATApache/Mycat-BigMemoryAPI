@@ -1,6 +1,7 @@
 package io.mycat.bigmem.sqlcache;
 
 /**
- * testCase :
+ *
+ * testCase:
  * \test\java\io\mycat\bigmem\sqlcache\testBigSQLResultCache.java
  * */
