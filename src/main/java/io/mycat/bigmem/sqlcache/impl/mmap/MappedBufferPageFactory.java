@@ -119,6 +119,7 @@ public class MappedBufferPageFactory implements IBufferPageFactory{
                             String pageName = this.getPageNameByIndex(index);
                             raf = new RandomAccessFile(pageName, "rw");
                             channel = raf.getChannel();
+
                             /**
                              * 文件映射 转换成 MappedByteBuffer
                              */

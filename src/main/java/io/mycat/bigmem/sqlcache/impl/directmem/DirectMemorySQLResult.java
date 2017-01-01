@@ -1,6 +1,6 @@
 package io.mycat.bigmem.sqlcache.impl.directmem;
 
-import io.mycat.bigmem.sqlcache.IBigCache;
+import io.mycat.bigmem.sqlcache.ISQLResult;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
  * @create 2016-12-28 07:46
  */
 
-public class DirectMemoryBigCache implements IBigCache {
+public class DirectMemorySQLResult implements ISQLResult {
     public long put(byte[] data) throws IOException {
         return 0;
     }

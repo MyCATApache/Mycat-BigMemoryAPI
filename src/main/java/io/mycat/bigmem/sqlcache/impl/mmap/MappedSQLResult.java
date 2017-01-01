@@ -1,7 +1,7 @@
 package io.mycat.bigmem.sqlcache.impl.mmap;
 
 import io.mycat.bigmem.sqlcache.AddressIndex;
-import io.mycat.bigmem.sqlcache.IBigCache;
+import io.mycat.bigmem.sqlcache.ISQLResult;
 import io.mycat.bigmem.sqlcache.MyCatBufferPage;
 import io.mycat.bigmem.util.UnsafeMemory;
 import io.mycat.bigmem.util.Utils;
@@ -22,8 +22,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author zagnix
  * @create 2016-12-02 15:46
  */
-public class MappedBigCache implements IBigCache{
-    private final static Logger LOGGER = LoggerFactory.getLogger(MappedBigCache.class);
+public class MappedSQLResult implements ISQLResult {
+    private final static Logger LOGGER = LoggerFactory.getLogger(MappedSQLResult.class);
     /**
      * 存放索引文件的目录
      */
@@ -176,18 +176,18 @@ public class MappedBigCache implements IBigCache{
      * @param cacheName
      * @throws IOException
      */
-    public MappedBigCache(String cacheDir, String cacheName) throws IOException{
+    public MappedSQLResult(String cacheDir, String cacheName) throws IOException{
         this(cacheDir,cacheName,DEFAULT_DATA_PAGE_SIZE);
     }
 
     /**
-     * MappedBigCache 构造函数
+     * MappedSQLResult 构造函数
      * @param cacheDir
      * @param cacheName
      * @param cacheSize
      * @throws IOException
      */
-    public MappedBigCache(String cacheDir, String cacheName, int cacheSize) throws IOException {
+    public MappedSQLResult(String cacheDir, String cacheName, int cacheSize) throws IOException {
 
         this.cacheDirectory = cacheDir;
         /**
