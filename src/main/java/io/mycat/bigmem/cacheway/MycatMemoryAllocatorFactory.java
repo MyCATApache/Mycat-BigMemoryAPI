@@ -14,7 +14,7 @@ import io.mycat.bigmem.util.PropertiesUtils;
 * 文件描述：TODO
 * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
 */
-public class MycatMemoryAlloctorFactory {
+public class MycatMemoryAllocatorFactory {
 
     /**
      * 创建内存分配器对象
@@ -23,7 +23,7 @@ public class MycatMemoryAlloctorFactory {
     * @return
     * @创建日期 2016年12月28日
     */
-    public static MemoryAlloctorInf createMemoryAlloctor() {
+    public static MemoryAllocatorInf createMemoryAlloctor() {
 
         try {
             // 获得内存分配的配制信息
@@ -33,7 +33,7 @@ public class MycatMemoryAlloctorFactory {
             Class<?> alloctorClass = Class.forName(allotClass);
 
             // 生成对象
-            MemoryAlloctorInf alloctObject = (MemoryAlloctorInf) alloctorClass.newInstance();
+            MemoryAllocatorInf alloctObject = (MemoryAllocatorInf) alloctorClass.newInstance();
 
             return alloctObject;
 

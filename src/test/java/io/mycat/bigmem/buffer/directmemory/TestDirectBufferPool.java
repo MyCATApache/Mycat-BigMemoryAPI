@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import io.mycat.bigmem.buffer.MycatBuffer;
 import io.mycat.bigmem.buffer.MycatBufferBase;
-import io.mycat.bigmem.cacheway.alloctor.MycatMemoryAlloctor;
+import io.mycat.bigmem.cacheway.alloctor.MycatMemoryAllocator;
 import io.mycat.bigmem.console.LocatePolicy;
 
 public class TestDirectBufferPool {

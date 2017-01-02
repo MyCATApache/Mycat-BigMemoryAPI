@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import io.mycat.bigmem.buffer.MycatBufferBase;
-import io.mycat.bigmem.cacheway.MemoryAlloctorInf;
+import io.mycat.bigmem.cacheway.MemoryAllocatorInf;
 import io.mycat.bigmem.console.ChunkMemoryAllotEnum;
 
 /**
@@ -19,7 +19,7 @@ import io.mycat.bigmem.console.ChunkMemoryAllotEnum;
  * 文件描述：TODO
  * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
  */
-public class MycatMemoryAlloctor implements MemoryAlloctorInf {
+public class MycatMemoryAllocator implements MemoryAllocatorInf {
 
     /**
      * 存储级别的map
@@ -41,7 +41,7 @@ public class MycatMemoryAlloctor implements MemoryAlloctorInf {
     * @param poolSize
      * @throws IOException 
     */
-    public MycatMemoryAlloctor() throws IOException {
+    public MycatMemoryAllocator() throws IOException {
         int msize = 1024 * 1024;
 
         for (int i = 0; i < ChunkMemoryAllotEnum.values().length; i++) {
