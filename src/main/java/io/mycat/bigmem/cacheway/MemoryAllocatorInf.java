@@ -7,7 +7,7 @@ import io.mycat.bigmem.buffer.MycatBufferBase;
  * @author liujun
  * 2016年12月29日
  */
-public interface MemoryAlloctorInf {
+public interface MemoryAllocatorInf {
 
 	/**
 	 * 进行缓存空间的分配

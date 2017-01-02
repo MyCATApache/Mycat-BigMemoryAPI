@@ -1,8 +1,8 @@
 package io.mycat.bigmem.allot;
 
 import io.mycat.bigmem.buffer.MycatBufferBase;
-import io.mycat.bigmem.cacheway.MemoryAlloctorInf;
-import io.mycat.bigmem.cacheway.MycatMemoryAlloctorFactory;
+import io.mycat.bigmem.cacheway.MemoryAllocatorInf;
+import io.mycat.bigmem.cacheway.MycatMemoryAllocatorFactory;
 import io.mycat.bigmem.console.ChunkMemoryAllotEnum;
 
 /**
@@ -14,7 +14,7 @@ import io.mycat.bigmem.console.ChunkMemoryAllotEnum;
 public class TestMycatBufferAllot {
 
     public static void main(String[] args) {
-        MemoryAlloctorInf memoryAllot = MycatMemoryAlloctorFactory.createMemoryAlloctor();
+        MemoryAllocatorInf memoryAllot = MycatMemoryAllocatorFactory.createMemoryAlloctor();
 
         // 优先使用可移动的直接内存，如果容量不够，可使用内存映射
         int allocFlag = ChunkMemoryAllotEnum.MEMORY_DIRECT_MOVE.getLevel()

@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 
 import io.mycat.bigmem.buffer.MycatBufferBase;
 import io.mycat.bigmem.buffer.MycatSwapBufer;
-import io.mycat.bigmem.cacheway.alloctor.MycatMemoryAlloctor;
+import io.mycat.bigmem.cacheway.alloctor.MycatMemoryAllocator;
 import io.mycat.bigmem.console.LocatePolicy;
 
 public class TestMapFileBuffer {
