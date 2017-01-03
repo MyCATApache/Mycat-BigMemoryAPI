@@ -1,13 +1,14 @@
 package io.mycat.bigmem.cacheway.alloctor.directmove;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.mycat.bigmem.buffer.DirectMemAddressInf;
 import io.mycat.bigmem.buffer.MycatBufferBase;
 import io.mycat.bigmem.buffer.MycatMovableBufer;
+import io.mycat.bigmem.cacheway.alloctor.BufferPageBase;
+import io.mycat.bigmem.cacheway.alloctor.BufferPageMoveInf;
 
 /**
  * 缓冲内存页的数据
@@ -20,36 +21,12 @@ import io.mycat.bigmem.buffer.MycatMovableBufer;
 * 文件描述：TODO
 * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
 */
-public class DirectMoveBufferPage {
-
-	/**
-	 * 操作的buffer信息
-	* @字段说明 buffer
-	*/
-	private MycatBufferBase buffer;
-
-	/**
-	* 每个chunk的大小
-	* @字段说明 chunkSize
-	*/
-	private int chunkSize;
-
-	/**
-	* 总的chunk数
-	* @字段说明 chunkIndex
-	*/
-	private int chunkCount;
-
-	/**
-	* 用于标识内存是否使用集合
-	* @字段说明 memUseSet
-	*/
-	private final BitSet memUseSet;
+public class DirectMoveBufferPage extends BufferPageBase implements BufferPageMoveInf {
 
 	/**
 	 * 进行分配的数组的初始化
 	 */
-	private final List<MycatBufferBase> allotBuffer;
+	private final Set<MycatBufferBase> allotBuffer;
 
 	/**
 	* 是否锁定标识
@@ -69,18 +46,20 @@ public class DirectMoveBufferPage {
 	* @param chunkSize
 	*/
 	public DirectMoveBufferPage(MycatBufferBase buffer, int chunkSize) {
-		this.buffer = buffer;
-		// 设置chunk的大小
-		this.chunkSize = chunkSize;
-		// 设置chunk的数量
-		this.chunkCount = (int) buffer.limit() / this.chunkSize;
-		// 设置当前内存标识块的大小
-		this.memUseSet = new BitSet(this.chunkCount);
+		// 进行父类的引用
+		super(buffer, chunkSize);
 		// 默认可使用的chunk数量为总的chunk数
 		this.canUseChunkNum = chunkCount;
-		// 进行分配对象的初始化
-		this.allotBuffer = new ArrayList<>(this.chunkCount);
+		// 进行分配对象记录容器的初始化
+		this.allotBuffer = new TreeSet<>((cmp1, cmp2) -> {
+			if (cmp1.address() > cmp2.address()) {
+				return 1;
+			} else if (cmp1.address() < cmp2.address()) {
+				return -1;
+			}
 
+			return 0;
+		});
 	}
 
 	/**
@@ -91,9 +70,12 @@ public class DirectMoveBufferPage {
 	* @创建日期 2016年12月19日
 	*/
 	public boolean checkNeedChunk(int chunkNum) {
-		// 如果当前可分配的内存块满足要求
-		if (this.canUseChunkNum >= chunkNum) {
-			return true;
+		// 仅在未锁定的情况下，才进行检查
+		if (!isLock.get()) {
+			// 如果当前可分配的内存块满足要求
+			if (this.canUseChunkNum >= chunkNum) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -149,36 +131,26 @@ public class DirectMoveBufferPage {
 				int needChunkEnd = startIndex + needChunkSize;
 				memUseSet.set(startIndex, needChunkEnd);
 
-				MycatMovableBufer moveBuffer = null;
+				// 标识为不可移动
+				buffer.beginOp();
 
-				// 检查当前对象是否实现了可移动接口
-				if (buffer instanceof MycatMovableBufer) {
-					moveBuffer = (MycatMovableBufer) buffer;
+				// 标识开始与结束号
+				buffer.putPosition(startIndex * chunkSize);
+				buffer.limit(needChunkEnd * chunkSize);
 
-					// 标识为不可移动
-					moveBuffer.beginOp();
+				// 进行数据进行匹配分段操作
+				MycatBufferBase bufferResult = buffer.slice();
 
-					// 标识开始与结束号
-					buffer.putPosition(startIndex * chunkSize);
-					buffer.limit(needChunkEnd * chunkSize);
+				// 当前可使用的，为之前的结果前去当前的需要的，
+				canUseChunkNum = canUseChunkNum - needChunkSize;
 
-					// 进行数据进行匹配分段操作
-					MycatBufferBase bufferResult = buffer.slice();
+				// 将当前分配的对象信息记录到集合中
+				this.allotBuffer.add(bufferResult);
 
-					// 当前可使用的，为之前的结果前去当前的需要的，
-					canUseChunkNum = canUseChunkNum - needChunkSize;
+				// 标识当前操作完成
+				buffer.commitOp();
 
-					// 将当前分配的对象信息记录到集合中
-					this.allotBuffer.add(bufferResult);
-
-					// 标识当前操作完成
-					moveBuffer.commitOp();
-
-					return bufferResult;
-				}
-
-			} else {
-				return null;
+				return bufferResult;
 			}
 
 		} finally {
@@ -210,27 +182,33 @@ public class DirectMoveBufferPage {
 			}
 
 			try {
+				bufferParam.beginOp();
 				// 计算chunk归还的数量
-				int chunkNum = (int) (buffer.capacity() - buffer.limit()) / chunkSize;
+				int chunkNum = (int) (bufferParam.capacity() - bufferParam.limit()) / chunkSize;
 
-				int chunkAdd = buffer.limit() % chunkSize == 0 ? (int) buffer.limit() / chunkSize
-						: (int) buffer.limit() / chunkSize + 1;
-				// 已经使用的地址减去父类最开始的地址，即为所有已经使用的地址，除以chunkSize得到chunk当前开始的地址,得到整块内存开始的地址
-				int startChunk = (int) ((thisNavBuf.address() - parentBuf.address()) / chunkSize) + chunkAdd;
+				if (chunkNum > 0) {
+					int chunkAdd = bufferParam.limit() % chunkSize == 0 ? (int) bufferParam.limit() / chunkSize
+							: (int) bufferParam.limit() / chunkSize + 1;
+					// 已经使用的地址减去父类最开始的地址，即为所有已经使用的地址，除以chunkSize得到chunk当前开始的地址,得到整块内存开始的地址
+					int startChunk = (int) ((thisNavBuf.address() - parentBuf.address()) / chunkSize) + chunkAdd;
 
-				int endChunkNum = startChunk + chunkNum;
+					int endChunkNum = startChunk + chunkNum;
 
-				// 将当前指定的内存块归还
-				memUseSet.clear(startChunk, endChunkNum);
+					// 将当前指定的内存块归还
+					memUseSet.clear(startChunk, endChunkNum);
 
-				// 引用对象的容量进行重新标识
-				bufferParam.limit((bufferParam.limit() - chunkNum) * chunkSize);
-				bufferParam.capacity((bufferParam.limit() - chunkNum) * chunkSize);
+					// 引用对象的容量进行重新标识
+					bufferParam.capacity(bufferParam.limit());
 
-				// 归还了内存，则需要将可使用的内存加上归还的内存
-				this.canUseChunkNum = canUseChunkNum + chunkNum;
+					// 归还了内存，则需要将可使用的内存加上归还的内存
+					this.canUseChunkNum = canUseChunkNum + chunkNum;
+				}
+
+				// 提交内存操作
+				bufferParam.commitOp();
 
 			} finally {
+
 				isLock.set(false);
 			}
 
@@ -239,6 +217,62 @@ public class DirectMoveBufferPage {
 		}
 
 		return false;
+	}
+
+	@Override
+	public Set<MycatBufferBase> getSliceMemory() {
+		return allotBuffer;
+	}
+
+	@Override
+	public void memoryCopy(MycatBufferBase useBuffer, int notUseIndex) {
+		// 获得内存buffer
+		DirectMemAddressInf thisNavBuf = (DirectMemAddressInf) useBuffer;
+		// attachment对象在buf.slice();的时候将attachment对象设置为总的buff对象
+		DirectMemAddressInf parentBuf = (DirectMemAddressInf) thisNavBuf.getAttach();
+
+		if (this.buffer == parentBuf) {
+
+			// 检查当前对象是否实现了可移动接口
+			if (buffer instanceof MycatMovableBufer) {
+				// 进行内存的拷贝操作
+				this.buffer.beginOp();
+
+				MycatMovableBufer moveBuffer = (MycatMovableBufer) buffer;
+
+				long addressBase = buffer.address();
+
+				int startChunk = (int) ((useBuffer.address() - addressBase) / chunkSize);
+
+				// 清除已经使用的内存块
+				clearBitSet(startChunk, (startChunk + useBuffer.limit() / chunkSize));
+
+				long tarAddress = addressBase + notUseIndex * chunkSize;
+				// 进行内存的拷贝操作
+				moveBuffer.memoryCopy(useBuffer.address(), tarAddress, useBuffer.limit());
+
+				// 引用地址重置
+				useBuffer.address(tarAddress);
+
+				// 重新标识已经使用的块
+				setBitSet(notUseIndex, notUseIndex + useBuffer.limit() / chunkSize);
+
+				this.buffer.commitOp();
+			}
+
+		}
+	}
+
+	private void clearBitSet(int startChunk, int endChunk) {
+		for (int i = startChunk; i <= endChunk; i++) {
+			this.memUseSet.clear(startChunk);
+		}
+	}
+
+	private void setBitSet(int startChunk, int endChunk) {
+		for (int i = startChunk; i <= endChunk; i++) {
+			this.memUseSet.set(startChunk, true);
+		}
 	}
 
 }

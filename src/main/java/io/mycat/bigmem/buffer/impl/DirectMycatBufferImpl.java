@@ -143,7 +143,7 @@ public class DirectMycatBufferImpl extends MycatBufferBase {
 
 	@Override
 	public void beginOp() {
-
+	    
 	}
 
 	@Override
