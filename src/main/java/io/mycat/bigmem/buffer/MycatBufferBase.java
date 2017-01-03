@@ -162,6 +162,13 @@ public abstract class MycatBufferBase implements MycatBuffer, DirectMemAddressIn
 	}
 
 	/**
+	 * 设置内存地址信息
+	 */
+	public void address(long address) {
+		this.address = address;
+	}
+
+	/**
 	 * 获取附着的信息
 	 */
 	public Object getAttach() {
