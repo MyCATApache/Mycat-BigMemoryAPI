@@ -10,13 +10,14 @@ public class MoveBufferRecycle {
 
         DirectMoveBufferPage movePage = new DirectMoveBufferPage(new DirectMycatBufferMoveImpl(64), 2);
 
-        MycatBufferBase buffer1 = movePage.alloactionMemory(4);
+        MycatBufferBase buffer1 = movePage.alloactionMemory(2);
 
         MycatBufferBase buffer2 = movePage.alloactionMemory(4);
 
         MycatBufferBase buffer3 = movePage.alloactionMemory(4);
 
         buffer1.beginOp();
+        buffer1.putByte((byte) 1);
         buffer1.putByte((byte) 1);
         buffer1.putByte((byte) 1);
         buffer1.putByte((byte) 1);
@@ -34,5 +35,7 @@ public class MoveBufferRecycle {
         movePage.recycleBuffer(buffer1);
 
     }
+    
+    
 
 }
