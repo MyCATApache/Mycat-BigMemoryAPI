@@ -1,4 +1,4 @@
-package io.mycat.bigmem.allot.recycle;
+package io.mycat.bigmem.allot.recycle.mark;
 
 import io.mycat.bigmem.buffer.MycatBufferBase;
 import io.mycat.bigmem.buffer.impl.DirectMycatBufferMoveImpl;
@@ -18,10 +18,10 @@ public class MarkMoveBufferRecycle {
 		MycatBufferBase buffer3 = movePage.alloactionMemory(4);
 
 		buffer1.beginOp();
-		buffer1.putByte((byte) 1);
-		buffer1.putByte((byte) 1);
-		buffer1.putByte((byte) 1);
-		buffer1.putByte((byte) 1);
+		buffer1.putByte((byte) 11);
+		buffer1.putByte((byte) 12);
+		buffer1.putByte((byte) 13);
+		buffer1.putByte((byte) 14);
 		// 重置limit容量信息
 		buffer1.limit(buffer1.putPosition());
 		buffer1.commitOp();
@@ -30,16 +30,16 @@ public class MarkMoveBufferRecycle {
 		movePage.recycleBuffer(buffer1);
 
 		buffer2.beginOp();
-		buffer2.putByte((byte) 2);
-		buffer2.putByte((byte) 2);
+		buffer2.putByte((byte) 21);
+		buffer2.putByte((byte) 22);
 		// 重新标识归还标识
-		buffer2.limit(buffer2.putPosition() + 2);
+		buffer2.limit(buffer2.putPosition() );
 		buffer2.commitOp();
 
 		movePage.recycleBuffer(buffer2);
 
 		buffer3.beginOp();
-		buffer3.putByte((byte) 3);
+		buffer3.putByte((byte) 31);
 		buffer3.limit(buffer3.putPosition() + 1);
 		buffer3.commitOp();
 
@@ -60,19 +60,9 @@ public class MarkMoveBufferRecycle {
 		printValue(movePage.getBuffer());
 
 		buffer3.beginOp();
-		buffer3.putByte((byte) 33);
+		buffer3.putByte((byte) 32);
 		buffer3.commitOp();
 
-		System.out.println("-----------------------------");
-		System.out.println();
-		System.out.println();
-
-		printValue(movePage.getBuffer());
-		buffer2.beginOp();
-		buffer2.putByte((byte) 22);
-		buffer2.putByte((byte) 22);
-		// 重新标识归还标识
-		buffer2.commitOp();
 
 		System.out.println("-----------------------------");
 		System.out.println();
