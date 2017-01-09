@@ -39,6 +39,12 @@ public class MyCatBigSqlResultsCache {
          */
         String key = "" + sql;
         Keyer<String,BigSQLResult> keyer = new Keyer<String,BigSQLResult>();
+        keyer.setKey(key);
+        keyer.setValue(bigSQLResult);
+        keyer.setCacheTTL(cache);
+        keyer.setAccessCount(accesCount);
+        keyer.setRemoveKeyListener(listener);
+        keyer.setiDataLoader(loader);
         sqlResultCacheImp.put(key,bigSQLResult,keyer);
     }
 
