@@ -2,7 +2,7 @@ package io.mycat.bigmem.mempool;
 
 import io.mycat.bigmem.buffer.MycatBuffer;
 import io.mycat.bigmem.buffer.MycatBufferBase;
-import io.mycat.bigmem.cacheway.MemoryAlloctorInf;
+import io.mycat.bigmem.cacheway.MemoryAllocatorInf;
 
 import java.nio.ByteBuffer;
 
@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
  * Created by znix on 2016/12/31.
  */
 public class MyCatByteBuf extends MycatBufferBase {
-    private MemoryAlloctorInf alloctorInf;
+    private MemoryAllocatorInf alloctorInf;
     private long capacity;
     private long maxCapacity;
     private long writerIndex;
