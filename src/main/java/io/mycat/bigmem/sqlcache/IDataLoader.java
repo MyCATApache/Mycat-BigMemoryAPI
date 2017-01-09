@@ -10,16 +10,9 @@ package io.mycat.bigmem.sqlcache;
 public interface IDataLoader<K,V>{
 
     /**
-     * 当访问的key,不存在时，回调该接口
-     * @param key
-     * @return
-     */
-    public V load(K key);
-
-    /**
      * Key失效，时候重新异步reload数据
-     * @param key
+     * @param keyer
      * @return
      */
-    public V reload(K key);
+    public V reload(Keyer<K,V> keyer);
 }
