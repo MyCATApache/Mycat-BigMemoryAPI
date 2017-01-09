@@ -482,7 +482,7 @@ public class MappedSQLResult implements ISQLResult {
                 }
 
                 toAppendIndexPage = this.indexPageFactory.acquirePage(toAppendIndexPageIndex);
-                int toAppendIndexItemOffset = (int) ((toAppendArrayIndex%INDEX_ITEMS_PER_PAGE)*INDEX_ITEM_LENGTH);
+                int toAppendIndexItemOffset = (int) ((toAppendArrayIndex&(INDEX_ITEMS_PER_PAGE-1))*INDEX_ITEM_LENGTH);
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("index page offset: " + toAppendIndexItemOffset);
                 }
@@ -693,7 +693,7 @@ public class MappedSQLResult implements ISQLResult {
             }
 
             indexPage = this.indexPageFactory.acquirePage(indexPageIndex);
-            int indexItemOffset = (int) ((index%INDEX_ITEMS_PER_PAGE) * INDEX_ITEM_LENGTH);
+            int indexItemOffset = (int) ((index&(INDEX_ITEMS_PER_PAGE-1)) * INDEX_ITEM_LENGTH);
             ByteBuffer indexItemBuffer = indexPage.getLocalByteBuffer(indexItemOffset);
             return indexItemBuffer;
         } finally {
