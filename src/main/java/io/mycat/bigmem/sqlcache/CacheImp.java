@@ -91,7 +91,7 @@ public class CacheImp<K,V> implements ICache<K,V> {
                      * reload 设计为异步加载
                      */
                     if(key.getiDataLoader() !=null){
-                        key.getiDataLoader().reload(key.getKey());
+                        key.getiDataLoader().reload(key);
                     }
                 }
             }

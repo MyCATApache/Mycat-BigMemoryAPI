@@ -6,6 +6,8 @@ import io.mycat.bigmem.sqlcache.impl.mmap.MappedSQLResult;
 import java.io.IOException;
 import java.util.Iterator;
 
+import static com.google.common.hash.Hashing.murmur3_32;
+
 /**
  * SQL大结果集缓存
  *
@@ -19,17 +21,17 @@ public class BigSQLResult implements Iterator {
     private ISQLResult sqlResult;
     private String cacheDir;
 
-    public BigSQLResult(LocatePolicy locatePolicy, String sqlkey, int pageSize){
+    public BigSQLResult(LocatePolicy locatePolicy, String sql, int pageSize){
         /**
          * Core - DirectMemory
          * Normal - mmap
          */
-        //TODO
-        this.cacheDir = "bigcache/"+sqlkey.hashCode();
+        this.cacheDir = "sqlcache/";
+        String sqlkey = ""+murmur3_32().hashUnencodedChars(sql);
 
         if (locatePolicy.equals(LocatePolicy.Normal)){
             try {
-                sqlResult = new MappedSQLResult(cacheDir,"sqlcache",pageSize);
+                sqlResult = new MappedSQLResult(cacheDir,sqlkey,pageSize);
             } catch (IOException e) {
                 e.printStackTrace();
             }
