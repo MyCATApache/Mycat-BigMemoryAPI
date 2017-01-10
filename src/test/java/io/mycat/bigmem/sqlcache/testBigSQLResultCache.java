@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.google.common.hash.Hashing.murmur3_32;
 import static org.junit.Assert.*;
 
 //TODO 待完善测试用例
@@ -57,6 +58,7 @@ public class testBigSQLResultCache {
         Map<String,BigSQLResult> sqlResultCacheMap = new HashMap<String,BigSQLResult>();
 
         String sql = "select * from table1";
+        String sqlkey = ""+murmur3_32().hashUnencodedChars(sql);
 
         /**
          * sql results back list
@@ -70,7 +72,7 @@ public class testBigSQLResultCache {
          */
 
         BigSQLResult sqlResultCache
-                = new BigSQLResult(LocatePolicy.Normal,sql,16*1024*1024);
+                = new BigSQLResult(LocatePolicy.Normal,sqlkey,16*1024*1024);
 
         for (int i = 0; i < ROWS ; i++) {
             byte[] rows = Utils.randomString(1024).getBytes();
@@ -81,14 +83,15 @@ public class testBigSQLResultCache {
              */
             sqlResultCache.put(rows);
         }
-        sqlResultCacheMap.put(sql,sqlResultCache);
+        sqlResultCacheMap.put(sqlkey,sqlResultCache);
 
 
 
         /**
          * 验证内存映射Cache，存放SQL结果集
          */
-        BigSQLResult sqlResCache = sqlResultCacheMap.get(sql);
+        BigSQLResult sqlResCache = sqlResultCacheMap.get(sqlkey);
+
         Assert.assertEquals(backList.size(),sqlResCache.size());
         for (int i = 0; i <backList.size() ; i++) {
             if (sqlResultCache.hasNext()){
