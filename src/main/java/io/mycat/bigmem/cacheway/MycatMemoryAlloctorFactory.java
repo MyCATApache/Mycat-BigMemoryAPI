@@ -1,8 +1,7 @@
 package io.mycat.bigmem.cacheway;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import io.mycat.bigmem.buffer.BufferAllocator;
+import io.mycat.bigmem.buffer.MemoryAllocator;
 import io.mycat.bigmem.console.MemoryAlloctorEnum;
 
 /**
@@ -48,4 +47,13 @@ public class MycatMemoryAlloctorFactory {
         return null;
     }
 
+   /**
+    * @see<a href="https://github.com/shenlee/Mycat-BigMemory">Mycat-BigMemory</a>
+    * @return
+    */
+  //todo:待抽取MemoryAllocator接口类
+    public MemoryAllocator getJemalloc()
+    {
+    	return MemoryAllocator.CURRENT;
+    }
 }
