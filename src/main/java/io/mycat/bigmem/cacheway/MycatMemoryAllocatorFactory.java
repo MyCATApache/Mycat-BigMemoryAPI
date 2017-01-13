@@ -1,5 +1,6 @@
 package io.mycat.bigmem.cacheway;
 
+import io.mycat.bigmem.buffer.MemoryAllocator;
 import io.mycat.bigmem.console.PropertiesKeyEnum;
 import io.mycat.bigmem.util.PropertiesUtils;
 
@@ -48,4 +49,14 @@ public class MycatMemoryAllocatorFactory {
         return null;
     }
 
+    /**
+     * @see<a href="https://github.com/shenlee/Mycat-BigMemory">Mycat-BigMemory</a>
+     * @return
+     * @author shenli, zwyqz, tracywwp
+     */
+   //todo:待抽取MemoryAllocator接口类
+     public MemoryAllocator getJemalloc()
+     {
+     	return MemoryAllocator.CURRENT;
+     }
 }
