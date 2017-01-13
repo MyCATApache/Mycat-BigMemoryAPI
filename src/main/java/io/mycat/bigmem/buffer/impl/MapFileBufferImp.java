@@ -33,7 +33,6 @@ import sun.nio.ch.FileChannelImpl;
 * 文件描述：TODO
 * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
 */
-@SuppressWarnings("restriction")
 public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer, MycatMovableBufer {
 
     /**
@@ -281,7 +280,7 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer,
         // 验证当前内存整理标识
         checkClearFlag();
 
-        int currPosition = this.getPosition;
+        int currPosition = this.putPosition;
         int cap = this.limit - currPosition;
         long address = this.address + currPosition;
         // 生新新的引用对象
@@ -414,6 +413,17 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer,
     }
 
     @Override
+    public void memoryCopy(long srcAddress, long targerAddress, int length) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        // 进行堆外的内存的拷贝操作
+        unsafe.copyMemory(null, srcAddress, null, targerAddress, length);
+
+    }
+
+    @Override
     public void commitOp() {
         // 操作完成，将内存管理器标识为可移动
         clearFlag = true;
@@ -434,12 +444,30 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer,
         return fileSize;
     }
 
-    /**
-     * 设置文件大小的方法
-     * @param fileSize
-     */
-    public void setFileSize(int fileSize) {
-        this.fileSize = fileSize;
+    @Override
+    public void limit(int limit) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        this.limit = limit;
+    }
+
+    @Override
+    public void putPosition(int position) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        this.putPosition = position;
+    }
+
+    public void getPosition(int getPosition) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        this.getPosition = getPosition;
     }
 
 }

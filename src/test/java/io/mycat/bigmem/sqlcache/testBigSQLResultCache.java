@@ -12,17 +12,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.google.common.hash.Hashing.murmur3_32;
 import static org.junit.Assert.*;
 
-//TODO
+//TODO å¾…å®Œå–„æµ‹è¯•ç”¨ä¾‹
 public class testBigSQLResultCache {
-    private BigSQLResultCache sqlResultCache;
+    private BigSQLResult sqlResultCache;
 
     @Test
     public void simpleTest() throws IOException {
         for(int i = 1; i <= 2; i++) {
 
-            sqlResultCache = new BigSQLResultCache(LocatePolicy.Normal, "select * from t",16*1024*1024);
+            sqlResultCache = new BigSQLResult(LocatePolicy.Normal, "select * from t",16*1024*1024);
             assertNotNull(sqlResultCache);
 
             for(int j = 1; j <= 3; j++) {
@@ -54,9 +55,10 @@ public class testBigSQLResultCache {
         long ROWS = 10000;
         //long ROWS = 10000*10000;
         //long ROWS = 100000*100000;
-        Map<String,BigSQLResultCache> sqlResultCacheMap = new HashMap<String,BigSQLResultCache>();
+        Map<String,BigSQLResult> sqlResultCacheMap = new HashMap<String,BigSQLResult>();
 
         String sql = "select * from table1";
+        String sqlkey = ""+murmur3_32().hashUnencodedChars(sql);
 
         /**
          * sql results back list
@@ -66,29 +68,30 @@ public class testBigSQLResultCache {
 
 
         /**
-         * Ê¹ÓÃÄÚ´æÓ³ÉäCache£¬´æ·ÅSQL½á¹û¼¯
+         * ä½¿ç”¨å†…å­˜æ˜ å°„Cacheï¼Œå­˜æ”¾SQLç»“æžœé›†
          */
 
-        BigSQLResultCache sqlResultCache
-                = new BigSQLResultCache(LocatePolicy.Normal,sql,16*1024*1024);
+        BigSQLResult sqlResultCache
+                = new BigSQLResult(LocatePolicy.Normal,sqlkey,16*1024*1024);
 
         for (int i = 0; i < ROWS ; i++) {
             byte[] rows = Utils.randomString(1024).getBytes();
             backList.add(rows);
 
             /**
-             * Ê¹ÓÃÄÚ´æÓ³ÉäCache£¬´æ·ÅSQL½á¹û¼¯
+             * ä½¿ç”¨å†…å­˜æ˜ å°„Cacheï¼Œå­˜æ”¾SQLç»“æžœé›†
              */
             sqlResultCache.put(rows);
         }
-        sqlResultCacheMap.put(sql,sqlResultCache);
+        sqlResultCacheMap.put(sqlkey,sqlResultCache);
 
 
 
         /**
-         * ÑéÖ¤ÄÚ´æÓ³ÉäCache£¬´æ·ÅSQL½á¹û¼¯
+         * éªŒè¯å†…å­˜æ˜ å°„Cacheï¼Œå­˜æ”¾SQLç»“æžœé›†
          */
-        BigSQLResultCache sqlResCache = sqlResultCacheMap.get(sql);
+        BigSQLResult sqlResCache = sqlResultCacheMap.get(sqlkey);
+
         Assert.assertEquals(backList.size(),sqlResCache.size());
         for (int i = 0; i <backList.size() ; i++) {
             if (sqlResultCache.hasNext()){
@@ -98,7 +101,7 @@ public class testBigSQLResultCache {
 
 
         /**
-         * ÖØ¸´¶Á
+         * é‡å¤è¯»
          */
         sqlResCache.reset();
         for (int i = 0; i <backList.size() ; i++) {
@@ -112,7 +115,6 @@ public class testBigSQLResultCache {
         if (sqlResultCache !=null){
             sqlResultCache.removeAll();
         }
-
 
     }
 

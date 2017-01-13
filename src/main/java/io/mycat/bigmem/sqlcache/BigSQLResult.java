@@ -1,10 +1,12 @@
 package io.mycat.bigmem.sqlcache;
 
 import io.mycat.bigmem.console.LocatePolicy;
-import io.mycat.bigmem.sqlcache.impl.mmap.MappedBigCache;
+import io.mycat.bigmem.sqlcache.impl.mmap.MappedSQLResult;
 
 import java.io.IOException;
 import java.util.Iterator;
+
+import static com.google.common.hash.Hashing.murmur3_32;
 
 /**
  * SQL大结果集缓存
@@ -14,22 +16,22 @@ import java.util.Iterator;
  * @create 2016-12-27 18:48
  */
 
-public class BigSQLResultCache implements Iterator {
+public class BigSQLResult implements Iterator {
 
-    private IBigCache bigSqlCache;
+    private ISQLResult sqlResult;
     private String cacheDir;
 
-    public BigSQLResultCache(LocatePolicy locatePolicy,String sqlkey,int pageSize){
+    public BigSQLResult(LocatePolicy locatePolicy, String sql, int pageSize){
         /**
          * Core - DirectMemory
          * Normal - mmap
          */
-        //TODO
-        this.cacheDir = "bigcache/"+sqlkey.hashCode();
+        this.cacheDir = "sqlcache/";
+        String sqlkey = ""+murmur3_32().hashUnencodedChars(sql);
 
         if (locatePolicy.equals(LocatePolicy.Normal)){
             try {
-                bigSqlCache = new MappedBigCache(cacheDir,"sqlcache",pageSize);
+                sqlResult = new MappedSQLResult(cacheDir,sqlkey,pageSize);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -44,7 +46,7 @@ public class BigSQLResultCache implements Iterator {
      */
     public void put(byte [] data){
         try {
-            bigSqlCache.put(data);
+            sqlResult.put(data);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,7 +57,7 @@ public class BigSQLResultCache implements Iterator {
      * @return
      */
     public boolean isEmpty(){
-        return bigSqlCache.isEmpty();
+        return sqlResult.isEmpty();
     }
 
     /**
@@ -63,7 +65,7 @@ public class BigSQLResultCache implements Iterator {
      * @return
      */
     public boolean hasNext() {
-        return !bigSqlCache.isEmpty();
+        return !sqlResult.isEmpty();
     }
 
     /**
@@ -73,7 +75,7 @@ public class BigSQLResultCache implements Iterator {
      */
     public byte[] next()  {
         try {
-            return bigSqlCache.next();
+            return sqlResult.next();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -91,7 +93,7 @@ public class BigSQLResultCache implements Iterator {
      * 主动将内存映射文件的数据刷到磁盘中
      */
     public void flush(){
-        bigSqlCache.flush();
+        sqlResult.flush();
     }
 
     /**
@@ -99,7 +101,7 @@ public class BigSQLResultCache implements Iterator {
      * @return
      */
     public long size(){
-        return bigSqlCache.size();
+        return sqlResult.size();
     }
 
     /**
@@ -107,12 +109,11 @@ public class BigSQLResultCache implements Iterator {
      */
     public void removeAll(){
         try {
-            bigSqlCache.removeAll();
+            sqlResult.removeAll();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
     /**
      * 从 PageLRUCache中移除Page，并执行unmap操作，但不删除文件
@@ -120,7 +121,7 @@ public class BigSQLResultCache implements Iterator {
      */
     public void recycle(){
         try {
-            bigSqlCache.recycle();
+            sqlResult.recycle();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -130,6 +131,6 @@ public class BigSQLResultCache implements Iterator {
      * 复位读位置为0，从头开始读取sql结果集
      */
     public void reset(){
-        bigSqlCache.reset();
+        sqlResult.reset();
     }
 }

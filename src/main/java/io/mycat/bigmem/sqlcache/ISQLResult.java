@@ -3,11 +3,11 @@ package io.mycat.bigmem.sqlcache;
 import java.io.IOException;
 
 /**
- * 管理 Buffer Page Factory 接口
+ * SQLResult 存放 实现接口
  * @author zagnix
  * @create 2016-11-18 16:46
  */
-public interface IBigCache {
+public interface ISQLResult {
 
     /**
      * 该将sql row的二进制数据，存放到Cache中
@@ -18,7 +18,7 @@ public interface IBigCache {
     public long put(byte[] data) throws IOException;
 
     /**
-     * 获取一套sql row的二进制数据
+     * 获取一条sql row的二进制数据
      * @return
      * @throws IOException
      */

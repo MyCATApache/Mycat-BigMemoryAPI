@@ -43,5 +43,13 @@ public interface MycatMovableBufer  {
     * @创建日期 2016年12月23日
     */
     public boolean getClearFlag();
+    
+    /**
+     * 进行内存的拷贝操作
+     * @param srcAddress 源内存地址操作
+     * @param targerAddress 目标地址操作
+     * @param length 拷贝的数据长度
+     */
+    public void memoryCopy(long srcAddress,long targerAddress,int length);
 
 }

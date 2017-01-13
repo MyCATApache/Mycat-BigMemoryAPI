@@ -22,7 +22,6 @@ import sun.misc.Unsafe;
 * 文件描述：TODO
 * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
 */
-@SuppressWarnings("restriction")
 public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatMovableBufer {
 
     /**
@@ -125,7 +124,7 @@ public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatM
         // 验证当前是否在进行内存整理
         checkClearFlag();
 
-        int currPosition = this.getPosition;
+        int currPosition = this.putPosition;
         int cap = this.limit - currPosition;
         long address = this.address + currPosition;
         // 生新新的引用对象
@@ -139,7 +138,7 @@ public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatM
     * @创建日期 2016年12月23日
     */
     private long addPutPos() {
-        if (this.putPosition > this.limit)
+        if (this.putPosition >= this.limit)
             throw new BufferOverflowException();
         return this.putPosition++;
     }
@@ -210,8 +209,45 @@ public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatM
     }
 
     @Override
+    public void limit(int limit) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        this.limit = limit;
+    }
+
+    @Override
+    public void putPosition(int position) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        this.putPosition = position;
+    }
+
+    public void getPosition(int getPosition) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        this.getPosition = getPosition;
+    }
+
+    @Override
     public boolean getClearFlag() {
         return this.clearFlag;
+    }
+
+    @Override
+    public void memoryCopy(long srcAddress, long targerAddress, int length) {
+
+        // 验证当前内存整理标识
+        checkClearFlag();
+
+        // 进行堆外的内存的拷贝操作
+        unsafe.copyMemory(null, srcAddress, null, targerAddress, length);
+
     }
 
 }
