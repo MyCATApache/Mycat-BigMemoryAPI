@@ -2,7 +2,6 @@ package io.mycat.bigmem.cacheway.alloctor.directmove;
 
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.mycat.bigmem.buffer.DirectMemAddressInf;
 import io.mycat.bigmem.buffer.MycatBufferBase;
@@ -28,17 +27,6 @@ public class DirectMoveBufferPage extends BufferPageBase implements BufferPageMo
      */
     private final Set<MycatBufferBase> allotBuffer;
 
-    /**
-    * 是否锁定标识
-    * @字段说明 isLock
-    */
-    private AtomicBoolean isLock = new AtomicBoolean(false);
-
-    /**
-    * 可以使用的chunkNum
-    * @字段说明 useMemoryChunkNum
-    */
-    private int canUseChunkNum;
 
     /**
     * 构造方法
@@ -48,8 +36,7 @@ public class DirectMoveBufferPage extends BufferPageBase implements BufferPageMo
     public DirectMoveBufferPage(MycatBufferBase buffer, int chunkSize) {
         // 进行父类的引用
         super(buffer, chunkSize);
-        // 默认可使用的chunk数量为总的chunk数
-        this.canUseChunkNum = chunkCount;
+
         // 进行分配对象记录容器的初始化
         this.allotBuffer = new TreeSet<>((cmp1, cmp2) -> {
             if (cmp1.address() > cmp2.address()) {
@@ -147,13 +134,15 @@ public class DirectMoveBufferPage extends BufferPageBase implements BufferPageMo
                 // 将当前分配的对象信息记录到集合中
                 this.allotBuffer.add(bufferResult);
 
-                // 标识当前操作完成
-                buffer.commitOp();
-
                 return bufferResult;
             }
 
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         } finally {
+            // 标识当前操作完成
+            buffer.commitOp();
             isLock.set(false);
         }
 
@@ -168,48 +157,35 @@ public class DirectMoveBufferPage extends BufferPageBase implements BufferPageMo
     * @param chunkNum 归还的数量
     * @创建日期 2016年12月19日
     */
-    public boolean recycleBuffer(MycatBufferBase bufferParam) {
+    public boolean recycleBuffer(MycatBufferBase bufferParam, int chunkStart, int chunkNum) {
 
-        // 获得内存buffer
-        DirectMemAddressInf thisNavBuf = (DirectMemAddressInf) bufferParam;
-        // attachment对象在buf.slice();的时候将attachment对象设置为总的buff对象
-        DirectMemAddressInf parentBuf = (DirectMemAddressInf) thisNavBuf.getAttach();
-
-        if (this.buffer == parentBuf) {
+        if (this.buffer == bufferParam) {
             // 如果加锁失败，则执行其他代码
             if (!isLock.compareAndSet(false, true)) {
                 Thread.yield();
             }
+            if (chunkNum > 0) {
+                try {
+                    // 进行开始动作
+                    bufferParam.beginOp();
 
-            try {
-                bufferParam.beginOp();
-                // 计算chunk归还的数量
-                int chunkNum = (int) (bufferParam.capacity() - bufferParam.limit()) / chunkSize;
-
-                if (chunkNum > 0) {
-                    int chunkAdd = bufferParam.limit() % chunkSize == 0 ? (int) bufferParam.limit() / chunkSize
-                            : (int) bufferParam.limit() / chunkSize + 1;
-                    // 已经使用的地址减去父类最开始的地址，即为所有已经使用的地址，除以chunkSize得到chunk当前开始的地址,得到整块内存开始的地址
-                    int startChunk = (int) ((thisNavBuf.address() - parentBuf.address()) / chunkSize) + chunkAdd;
-
-                    int endChunkNum = startChunk + chunkNum;
+                    int endChunkNum = chunkStart + chunkNum;
 
                     // 将当前指定的内存块归还
-                    memUseSet.clear(startChunk, endChunkNum);
+                    memUseSet.clear(chunkStart, endChunkNum);
 
                     // 引用对象的容量进行重新标识
                     bufferParam.capacity(bufferParam.limit());
-
                     // 归还了内存，则需要将可使用的内存加上归还的内存
                     this.canUseChunkNum = canUseChunkNum + chunkNum;
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    // 提交内存操作
+                    bufferParam.commitOp();
+                    isLock.set(false);
                 }
-
-                // 提交内存操作
-                bufferParam.commitOp();
-
-            } finally {
-
-                isLock.set(false);
             }
 
             return true;
@@ -236,28 +212,33 @@ public class DirectMoveBufferPage extends BufferPageBase implements BufferPageMo
             // 检查当前对象是否实现了可移动接口
             if (buffer instanceof MycatMovableBufer) {
                 // 进行内存的拷贝操作
-                this.buffer.beginOp();
+                try {
+                    this.buffer.beginOp();
 
-                MycatMovableBufer moveBuffer = (MycatMovableBufer) buffer;
+                    MycatMovableBufer moveBuffer = (MycatMovableBufer) buffer;
 
-                long addressBase = buffer.address();
+                    long addressBase = buffer.address();
 
-                int startChunk = (int) ((useBuffer.address() - addressBase) / chunkSize);
+                    int startChunk = (int) ((useBuffer.address() - addressBase) / chunkSize);
 
-                // 清除已经使用的内存块
-                clearBitSet(startChunk, (startChunk + useBuffer.limit() / chunkSize));
+                    // 清除已经使用的内存块
+                    clearBitSet(startChunk, (startChunk + useBuffer.limit() / chunkSize));
 
-                long tarAddress = addressBase + notUseIndex * chunkSize;
-                // 进行内存的拷贝操作
-                moveBuffer.memoryCopy(useBuffer.address(), tarAddress, useBuffer.limit());
+                    long tarAddress = addressBase + notUseIndex * chunkSize;
+                    // 进行内存的拷贝操作
+                    moveBuffer.memoryCopy(useBuffer.address(), tarAddress, useBuffer.limit());
 
-                // 引用地址重置
-                useBuffer.address(tarAddress);
+                    // 引用地址重置
+                    useBuffer.address(tarAddress);
 
-                // 重新标识已经使用的块
-                setBitSet(notUseIndex, notUseIndex + useBuffer.limit() / chunkSize);
+                    // 重新标识已经使用的块
+                    setBitSet(notUseIndex, notUseIndex + useBuffer.limit() / chunkSize);
 
-                this.buffer.commitOp();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    this.buffer.commitOp();
+                }
             }
 
         }

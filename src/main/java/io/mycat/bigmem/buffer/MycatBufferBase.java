@@ -182,7 +182,7 @@ public abstract class MycatBufferBase implements MycatBuffer, DirectMemAddressIn
 	 *   Read or write    
 	 *   Buf.commitOp();    
 	 */
-	public abstract void beginOp();
+    public abstract void beginOp() throws InterruptedException;
 
 	/**
 	 * 当前操作完成，事要进行内存整理

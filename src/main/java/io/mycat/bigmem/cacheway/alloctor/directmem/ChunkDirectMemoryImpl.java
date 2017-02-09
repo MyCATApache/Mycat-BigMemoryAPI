@@ -3,6 +3,7 @@ package io.mycat.bigmem.cacheway.alloctor.directmem;
 import io.mycat.bigmem.buffer.DirectMemAddressInf;
 import io.mycat.bigmem.buffer.MycatBufferBase;
 import io.mycat.bigmem.buffer.impl.DirectMycatBufferImpl;
+import io.mycat.bigmem.cacheway.alloctor.BufferPageBase;
 import io.mycat.bigmem.cacheway.alloctor.ChunkMemoryAllotInf;
 
 /**
@@ -16,7 +17,7 @@ public class ChunkDirectMemoryImpl implements ChunkMemoryAllotInf {
      * 内存池对象信息
      * @字段说明 pool
      */
-    private DirectBufferPage[] POOL;
+    private BufferPageBase[] POOL;
 
     /**
     * 每个chunk的大小
@@ -56,8 +57,8 @@ public class ChunkDirectMemoryImpl implements ChunkMemoryAllotInf {
         // 计算需要的chunk大小
         int needChunk = size % CHUNK_SIZE == 0 ? size / CHUNK_SIZE : size / CHUNK_SIZE + 1;
         // 取得内存页信息
-        DirectBufferPage page = null;
-        for (DirectBufferPage pageMemory : POOL) {
+        BufferPageBase page = null;
+        for (BufferPageBase pageMemory : POOL) {
             if (pageMemory.checkNeedChunk(needChunk)) {
                 page = pageMemory;
                 break;
@@ -96,7 +97,7 @@ public class ChunkDirectMemoryImpl implements ChunkMemoryAllotInf {
 
                 boolean recyProc = false;
 
-                for (DirectBufferPage pageMemory : POOL) {
+                for (BufferPageBase pageMemory : POOL) {
                     if ((recyProc = pageMemory.recycleBuffer((MycatBufferBase) parentBuf, startChunk,
                             chunkNum)) == true) {
                         break;
@@ -109,10 +110,10 @@ public class ChunkDirectMemoryImpl implements ChunkMemoryAllotInf {
             } else {
                 System.out.println("not memory recycle");
             }
-            
+
             return true;
         }
-        
+
         return false;
     }
 
