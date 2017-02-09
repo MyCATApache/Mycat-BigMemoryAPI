@@ -7,7 +7,7 @@ import io.mycat.bigmem.cacheway.alloctor.recycle.impl.MarkMovePageRecycleImpl;
 
 public class MarkMoveBufferRecycle2 {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         DirectMoveBufferPage movePage = new DirectMoveBufferPage(new DirectMycatBufferMoveImpl(64), 2);
 
@@ -22,7 +22,7 @@ public class MarkMoveBufferRecycle2 {
         buffer1.commitOp();
 
         // 进行buffer1的内存归还操作
-        movePage.recycleBuffer(buffer1);
+        movePage.recycleBuffer(buffer1,0,0);
 
         buffer2.beginOp();
         buffer2.putByte((byte) 21);
@@ -31,7 +31,7 @@ public class MarkMoveBufferRecycle2 {
         buffer2.limit(buffer2.putPosition() + 2);
         buffer2.commitOp();
 
-        movePage.recycleBuffer(buffer2);
+        movePage.recycleBuffer(buffer2,0,0);
 
         printValue(movePage.getBuffer());
 
@@ -54,7 +54,7 @@ public class MarkMoveBufferRecycle2 {
 
     }
 
-    public static void printValue(MycatBufferBase buffer) {
+    public static void printValue(MycatBufferBase buffer) throws InterruptedException {
 
         buffer.beginOp();
 

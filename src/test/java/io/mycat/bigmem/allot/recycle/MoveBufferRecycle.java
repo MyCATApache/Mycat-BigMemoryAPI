@@ -6,7 +6,7 @@ import io.mycat.bigmem.cacheway.alloctor.directmove.DirectMoveBufferPage;
 
 public class MoveBufferRecycle {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         DirectMoveBufferPage movePage = new DirectMoveBufferPage(new DirectMycatBufferMoveImpl(64), 2);
 
@@ -25,14 +25,14 @@ public class MoveBufferRecycle {
         buffer1.commitOp();
 
         // 进行buffer1的内存归还操作
-        movePage.recycleBuffer(buffer1);
+        movePage.recycleBuffer(buffer1,0,1);
 
         buffer2.beginOp();
         buffer2.putByte((byte) 2);
         buffer2.putByte((byte) 2);
         buffer2.commitOp();
 
-        movePage.recycleBuffer(buffer1);
+        movePage.recycleBuffer(buffer1,0,0);
 
     }
     
