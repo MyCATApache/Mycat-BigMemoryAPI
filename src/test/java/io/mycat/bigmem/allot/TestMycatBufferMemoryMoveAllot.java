@@ -14,7 +14,7 @@ import io.mycat.bigmem.console.ChunkMemoryAllotEnum;
  */
 public class TestMycatBufferMemoryMoveAllot {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         MemoryAllocatorInf memoryAllot = MycatMemoryAllocatorFactory.createMemoryAlloctor();
 
         // 优先使用可移动的直接内存，如果容量不够，可使用内存映射
