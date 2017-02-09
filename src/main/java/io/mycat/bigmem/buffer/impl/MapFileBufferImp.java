@@ -400,8 +400,7 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer,
         }
     }
 
-    @Override
-    public void beginOp() {
+    public void beginOp() throws InterruptedException {
         try {
             // 获取语可
             accessReq.acquire();
@@ -409,6 +408,7 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer,
             clearFlag = false;
         } catch (InterruptedException e) {
             e.printStackTrace();
+            throw e;
         }
     }
 

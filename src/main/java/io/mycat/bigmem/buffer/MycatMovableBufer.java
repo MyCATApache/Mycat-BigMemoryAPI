@@ -29,7 +29,7 @@ public interface MycatMovableBufer  {
      *   Read or write    
      *   Buf.commitOp();    
      */
-    public void beginOp();
+    public void beginOp() throws InterruptedException;
 
     /**
      * 当前操作完成，事要进行内存整理

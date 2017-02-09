@@ -1,6 +1,7 @@
 package io.mycat.bigmem.cacheway.alloctor;
 
 import java.util.BitSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.mycat.bigmem.buffer.MycatBufferBase;
 
@@ -36,6 +37,18 @@ public abstract class BufferPageBase {
     */
     protected final BitSet memUseSet;
 
+    /**
+    * 是否锁定标识
+    * @字段说明 isLock
+    */
+    protected AtomicBoolean isLock = new AtomicBoolean(false);
+
+    /**
+     * 可以使用的chunkNum
+     * @字段说明 useMemoryChunkNum
+     */
+    protected int canUseChunkNum;
+
     public BufferPageBase(MycatBufferBase buffer, int chunkSize) {
         this.buffer = buffer;
         // 设置chunk的大小
@@ -44,6 +57,8 @@ public abstract class BufferPageBase {
         this.chunkCount = (int) buffer.limit() / this.chunkSize;
         // 设置当前内存标识块的大小
         this.memUseSet = new BitSet(this.chunkCount);
+        // 默认可使用的chunk数量为总的chunk数
+        this.canUseChunkNum = chunkCount;
     }
 
     public MycatBufferBase getBuffer() {
@@ -73,5 +88,28 @@ public abstract class BufferPageBase {
     public BitSet getMemUseSet() {
         return memUseSet;
     }
+
+    /**
+     * 需要实现的，能够计算可用chunk的方法
+     * @param chunkNum
+     * @return
+     */
+    public abstract boolean checkNeedChunk(int chunkNum);
+
+    /**
+     * 进行指定内存块分配的方法
+     * @param needChunkSize 需要的内存页数大小
+     * @return
+     */
+    public abstract MycatBufferBase alloactionMemory(int needChunkSize);
+
+    /**
+     * 进宪内存归还的方法
+     * @param parentBuffer 分配的内存对象
+     * @param chunkStart 开始的内存块索引号
+     * @param chunkNum 归还的数量
+     * @return
+     */
+    public abstract boolean recycleBuffer(MycatBufferBase parentBuffer, int chunkStart, int chunkNum);
 
 }

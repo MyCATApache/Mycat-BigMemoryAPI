@@ -188,16 +188,10 @@ public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatM
         }
     }
 
-    @Override
-    public void beginOp() {
-        try {
-            accessReq.acquire();
-            // 标识当前正在进行内存操作，不能整理内存
-            clearFlag = false;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+    public void beginOp() throws InterruptedException  {
+        accessReq.acquire();
+        // 标识当前正在进行内存操作，不能整理内存
+        clearFlag = false;
     }
 
     @Override
