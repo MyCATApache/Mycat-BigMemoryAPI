@@ -1,9 +1,9 @@
 package io.mycat.bigmem.allot.recycle.mark;
 
-import io.mycat.bigmem.buffer.MycatBufferBase;
-import io.mycat.bigmem.buffer.impl.DirectMycatBufferMoveImpl;
-import io.mycat.bigmem.cacheway.alloctor.directmove.DirectMoveBufferPage;
-import io.mycat.bigmem.cacheway.alloctor.recycle.impl.MarkMovePageRecycleImpl;
+import io.mycat.bigmem.chunkpageallot.buffer.MycatBufferBase;
+import io.mycat.bigmem.chunkpageallot.buffer.impl.DirectMycatBufferMoveImpl;
+import io.mycat.bigmem.chunkpageallot.bufferpage.impl.DirectMoveBufferPage;
+import io.mycat.bigmem.chunkpageallot.recycle.impl.MarkMovePageRecycleImpl;
 
 public class MarkMoveBufferRecycle2 {
 

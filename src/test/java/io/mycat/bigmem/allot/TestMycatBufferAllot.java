@@ -1,9 +1,9 @@
 package io.mycat.bigmem.allot;
 
-import io.mycat.bigmem.buffer.MycatBufferBase;
-import io.mycat.bigmem.cacheway.MemoryAllocatorInf;
-import io.mycat.bigmem.cacheway.MycatMemoryAllocatorFactory;
-import io.mycat.bigmem.console.ChunkMemoryAllotEnum;
+import io.mycat.bigmem.chunkpageallot.MemoryAllocatorInf;
+import io.mycat.bigmem.chunkpageallot.MycatMemoryAllocatorFactory;
+import io.mycat.bigmem.chunkpageallot.buffer.MycatBufferBase;
+import io.mycat.bigmem.chunkpageallot.console.ChunkMemoryAllotEnum;
 
 /**
  * 测试内存的优先分配操作

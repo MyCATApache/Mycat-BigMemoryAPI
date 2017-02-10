@@ -1,8 +1,8 @@
 package io.mycat.bigmem.allot.recycle;
 
-import io.mycat.bigmem.buffer.MycatBufferBase;
-import io.mycat.bigmem.buffer.impl.DirectMycatBufferMoveImpl;
-import io.mycat.bigmem.cacheway.alloctor.directmove.DirectMoveBufferPage;
+import io.mycat.bigmem.chunkpageallot.buffer.MycatBufferBase;
+import io.mycat.bigmem.chunkpageallot.buffer.impl.DirectMycatBufferMoveImpl;
+import io.mycat.bigmem.chunkpageallot.bufferpage.impl.DirectMoveBufferPage;
 
 public class MoveBufferRecycle {
 
