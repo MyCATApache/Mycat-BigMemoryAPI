@@ -1,8 +1,8 @@
 package io.mycat.bigmem.mempool;
 
-import io.mycat.bigmem.buffer.MycatBuffer;
-import io.mycat.bigmem.buffer.MycatBufferBase;
-import io.mycat.bigmem.cacheway.MemoryAllocatorInf;
+import io.mycat.bigmem.chunkpageallot.MemoryAllocatorInf;
+import io.mycat.bigmem.chunkpageallot.buffer.MycatBuffer;
+import io.mycat.bigmem.chunkpageallot.buffer.MycatBufferBase;
 
 import java.nio.ByteBuffer;
 

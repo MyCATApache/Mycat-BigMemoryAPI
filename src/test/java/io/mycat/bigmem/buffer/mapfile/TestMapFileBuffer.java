@@ -3,9 +3,9 @@ package io.mycat.bigmem.buffer.mapfile;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import io.mycat.bigmem.buffer.MycatBufferBase;
-import io.mycat.bigmem.buffer.MycatSwapBufer;
-import io.mycat.bigmem.cacheway.alloctor.MycatMemoryAllocator;
+import io.mycat.bigmem.chunkpageallot.alloctor.MycatMemoryAllocator;
+import io.mycat.bigmem.chunkpageallot.buffer.MycatBufferBase;
+import io.mycat.bigmem.chunkpageallot.buffer.MycatSwapBufer;
 import io.mycat.bigmem.console.LocatePolicy;
 
 public class TestMapFileBuffer {
