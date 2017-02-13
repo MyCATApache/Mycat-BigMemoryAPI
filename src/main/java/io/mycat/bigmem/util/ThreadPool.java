@@ -31,6 +31,7 @@ public class ThreadPool {
     /**
      * 提交一个带返回值的任务
      * @param callJob 参数
+     * @param <T> 参数信息
      */
     public <T> void submit(Callable<T> callJob) {
         POOLEXECUTOR.submit(callJob);
