@@ -5,31 +5,31 @@ package io.mycat.bigmem.sqlcache;
  * 主要实现SQL结果集缓存规则
  * 1.缓存时间
  * 2.在缓存时间内，访问次数超过N次，重新从DB后台load数据，更新Value
- * @author zagnix
+ * or zagnix
  * @version 1.0
- * @create 2016-12-30 11:26
+ *  2016-12-30 11:26
  */
 public interface ICache<K, V> {
 
     /**
-     *
-     * @param key
-     * @param value
-     * @param keyer
+     * 放入
+     * @param key 参数
+     * @param value 值
+     * @param keyer 参数
      */
     public void put(final K key,final V value,final Keyer<K,V> keyer);
 
     /**
      *
-     * @param key
-     * @return
+     * @param key 参数
+     * @return 返回 
      */
     public V get(final K key);
 
 
     /**
-     *
-     * @param key
+     * 参数信息
+     * @param key 参数信息
      */
     public void remove(final K key);
 

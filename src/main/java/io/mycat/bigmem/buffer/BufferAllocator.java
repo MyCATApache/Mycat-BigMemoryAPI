@@ -3,7 +3,7 @@ package io.mycat.bigmem.buffer;
 
 /**
  * allocator , recycle and gc buffers
- * @author shenli
+ * or shenli
  *
  */
 public interface BufferAllocator {

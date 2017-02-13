@@ -17,19 +17,17 @@ public interface CacheStrategyInf {
 
     /**
      * 从缓存中获取数据
-    * 方法描述
-    * @param p 指定的参数信息
-    * @return
-    * @创建日期 2016年12月20日
-    */
+     * @param p 参数
+     * @return 返回信息
+     */
     public <T> T getBufferData(Map<String, Object> p);
 
     /**
      * 进行数据写入缓存
     * 方法描述
-    * @param r 写入的查询结果集信息
-    * @return
-    * @创建日期 2016年12月20日
+    * @param p 写入的查询结果集信息
+    * @return 返回 
+    *  2016年12月20日
     */
     public boolean writeBufferdata(Map<String, Object> p);
 

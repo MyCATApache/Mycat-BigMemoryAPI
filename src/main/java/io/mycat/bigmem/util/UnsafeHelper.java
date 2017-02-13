@@ -39,8 +39,8 @@ public class UnsafeHelper {
      * `------------------+------------------+-------------------+---------------'
      * </pre>
      *
-     * @param clazz
-     * @return
+     * @param clazz 参数
+     * @return 返回 
      */
     public static long headerSize(Class clazz) {
         // TODO Should be calculated based on the platform
@@ -56,8 +56,8 @@ public class UnsafeHelper {
     /**
      * Returns the offset of the first field in the range [headerSize, sizeOf].
      *
-     * @param clazz
-     * @return
+     * @param clazz 参数
+     * @return 参数
      */
     public static long firstFieldOffset(Class clazz) {
         long minSize = roundUpTo8(headerSize(clazz));
@@ -103,8 +103,8 @@ public class UnsafeHelper {
      * Instances include a header + all fields + padded to 8 bytes.
      * If this is an array, it does not include the size of the elements.
      *
-     * @param clazz
-     * @return
+     * @param clazz 参数
+     * @return 参数
      */
     public static long sizeOf(Class clazz) {
         long maxSize = headerSize(clazz);

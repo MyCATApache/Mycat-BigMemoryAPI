@@ -22,7 +22,7 @@ public class CacheStrategy {
 
     /**
      * 缓存策略的信息存储的Map
-    * @字段说明 strategyMap
+    *  strategyMap
     */
     private static final Map<LocatePolicy, CacheStrategyInf> strategyMap = new HashMap<>();
 
@@ -46,9 +46,9 @@ public class CacheStrategy {
     /**
      * 获得策略信息
     * 方法描述
-    * @param policy
-    * @return
-    * @创建日期 2016年12月20日
+    * @param policy 参数
+    * @return 参数
+    *  2016年12月20日
     */
     public CacheStrategyInf getStrategy(LocatePolicy policy) {
         return strategyMap.get(policy);

@@ -1,7 +1,7 @@
 package io.mycat.bigmem.buffer;
 /**
-*@desc:
-*@author: zhangwy   @date: 2016年12月28日 上午6:51:00
+*
+*or zhangwy   : 2016年12月28日 上午6:51:00
 **/
 public class Subpage<T> {
 	private Chunk<T> chunk; /*属于哪个chunk*/
@@ -35,11 +35,10 @@ public class Subpage<T> {
 		initSubpage(size);
 	}
 	
-	/** 初始化一个subpage页面
-	*@desc:
-	*@return: void
-	*@auth: zhangwy @date: 2016年12月28日 上午7:24:44
-	**/
+	/**
+	 *  初始化一个subpage页面
+	 * @param size 参数
+	 */
 	public void initSubpage(int size) {
 		this.elememtSize = size;
 		if(elememtSize != 0) {

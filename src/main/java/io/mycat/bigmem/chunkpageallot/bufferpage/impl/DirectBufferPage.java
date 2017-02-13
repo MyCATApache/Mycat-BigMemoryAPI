@@ -18,8 +18,8 @@ public class DirectBufferPage extends BufferPageBase {
 
     /**
     * 构造方法
-    * @param memorySize
-    * @param chunkSize
+    * @param buffer 参数
+    * @param chunkSize 参数
     */
     public DirectBufferPage(MycatBufferBase buffer, int chunkSize) {
         // 进行父类的引用
@@ -29,9 +29,9 @@ public class DirectBufferPage extends BufferPageBase {
     /**
     * 检查当前内存页能否满足内存数据的分配要求
     * 方法描述
-    * @param chunkNum
+    * @param chunkNum 参数
     * @return 1,可分配 0，不能
-    * @创建日期 2016年12月19日
+    *  2016年12月19日
     */
     public boolean checkNeedChunk(int chunkNum) {
         // 仅在未锁定的情况下，才进行检查
@@ -47,10 +47,9 @@ public class DirectBufferPage extends BufferPageBase {
     /**
     * 获得chunk的buffer信息
     * 方法描述
-    * @param needChunkSize
-    * @param timeout 系统过期时间
-    * @return
-    * @创建日期 2016年12月19日
+    * @param needChunkSize 参数
+    * @return 返回
+    *  2016年12月19日
     */
     public MycatBufferBase alloactionMemory(int needChunkSize) {
         // 如果当前的可分配的内在块小于需要内存块，则返回
@@ -120,10 +119,11 @@ public class DirectBufferPage extends BufferPageBase {
     /**
     * 进行内存的归还操作，以便后面再使用
     * 方法描述
-    * @param parentBuffer
-    * @param chunkStart
-    * @param chunkNum
-    * @创建日期 2016年12月19日
+    * @param parentBuffer 参数
+    * @param chunkStart 参数
+    * @param chunkNum 参数
+    * @return 返回 
+    *  2016年12月19日
     */
     public boolean recycleBuffer(MycatBufferBase parentBuffer, int chunkStart, int chunkNum) {
         if (this.buffer == parentBuffer) {

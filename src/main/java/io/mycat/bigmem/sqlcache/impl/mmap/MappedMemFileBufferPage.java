@@ -14,9 +14,9 @@ import java.security.PrivilegedAction;
 /**
  * 内存映射文件实现data存储
  *
- * @author zagnix
+ * or zagnix
  * @version 1.0
- * @create 2016-12-27 18:52
+ *  2016-12-27 18:52
  */
 
 public class MappedMemFileBufferPage extends MyCatBufferPage {
@@ -46,10 +46,10 @@ public class MappedMemFileBufferPage extends MyCatBufferPage {
     /**
      * 创建 一个MappedByteBufferPage对象
      *
-     * @param mappedByteBuffer
-     * @param file
-     * @param index
-     * @param cacheTTL
+     * @param mappedByteBuffer 参数
+     * @param file 参数
+     * @param index 参数
+     * @param cacheTTL 参数
      */
     public MappedMemFileBufferPage(MappedByteBuffer mappedByteBuffer, String file, long index, long cacheTTL){
         super(mappedByteBuffer.load(),cacheTTL);
@@ -60,9 +60,9 @@ public class MappedMemFileBufferPage extends MyCatBufferPage {
 
     /**
      *
-     * @param position
-     * @param length
-     * @return
+     * @param position 参数
+     * @param length 参数
+     * @return 参数
      */
     public byte[] getBytes(int position, int length) {
         ByteBuffer buf = this.getLocalByteBuffer(position);
@@ -72,10 +72,10 @@ public class MappedMemFileBufferPage extends MyCatBufferPage {
     }
 
     /**
-     * ByteBuffer  slice from Thread Local
-     * @param position
-     * @param limit
-     * @return
+     * ByteBuffer  slice from Thread Local 参数
+     * @param position 参数
+     * @param limit 参数
+     * @return 参数
      */
     public ByteBuffer slice(int position, int limit) {
         ByteBuffer buffer = this.threadLocalByteBuffer.get();
@@ -87,8 +87,8 @@ public class MappedMemFileBufferPage extends MyCatBufferPage {
     /**
      * ByteBuffer from Thread Local
      *
-     * @param position
-     * @return
+     * @param position 参数
+     * @return 参数
      */
     public ByteBuffer getLocalByteBuffer(int position) {
         ByteBuffer buf = this.threadLocalByteBuffer.get();
@@ -115,7 +115,7 @@ public class MappedMemFileBufferPage extends MyCatBufferPage {
 
     /**
      * 返回 页 号
-     * @return
+     * @return 参数
      */
     public long getPageIndex() {
         return this.pageIndex;
@@ -123,7 +123,7 @@ public class MappedMemFileBufferPage extends MyCatBufferPage {
 
     /**
      * 设置 页 为  dirty
-     * @param dirty
+     * @param dirty 参数
      */
     public void setDirty(boolean dirty) {
         this.dirty = dirty;
@@ -131,7 +131,7 @@ public class MappedMemFileBufferPage extends MyCatBufferPage {
 
     /**
      * 回收页，关闭文件pageName
-     * @throws IOException
+     * @throws IOException 参数
      */
     public void recycle() throws IOException{
 
@@ -150,7 +150,7 @@ public class MappedMemFileBufferPage extends MyCatBufferPage {
     /**
      * 解文件内存映射
      *
-     * @param buffer
+     * @param buffer 参数
      */
     private void unmap(final MappedByteBuffer buffer) {
         if(buffer == null)

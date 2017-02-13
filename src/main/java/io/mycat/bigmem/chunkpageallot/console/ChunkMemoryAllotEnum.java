@@ -7,7 +7,7 @@ import io.mycat.bigmem.chunkpageallot.alloctor.impl.ChunkFileMapMemoryImpl;
 
 /**
  * 进行大内存分配的级别对象信息
- * @author liujun
+ * or liujun
  * 2016年12月29日
  */
 public enum ChunkMemoryAllotEnum {

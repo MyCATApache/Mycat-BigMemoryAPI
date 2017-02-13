@@ -23,7 +23,7 @@ public class DirectMycatBufferImpl extends MycatBufferBase {
 
     /**
      * 用来进行自己内存管理的对象
-    * @字段说明 unsafe
+    *  unsafe
     */
     private Unsafe unsafe;
 
@@ -106,7 +106,7 @@ public class DirectMycatBufferImpl extends MycatBufferBase {
      * 将添加的指针加1
     * 方法描述
     * @return
-    * @创建日期 2016年12月23日
+    *  2016年12月23日
     */
     private long addPutPos() {
         if (this.putPosition > this.limit)
@@ -118,7 +118,7 @@ public class DirectMycatBufferImpl extends MycatBufferBase {
      * 将获取的指针加1
     * 方法描述
     * @return
-    * @创建日期 2016年12月23日
+    *  2016年12月23日
     */
     private long addGetPos() {
         if (this.getPosition > this.limit)

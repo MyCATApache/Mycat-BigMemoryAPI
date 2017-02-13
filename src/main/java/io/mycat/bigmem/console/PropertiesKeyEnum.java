@@ -2,8 +2,8 @@ package io.mycat.bigmem.console;
 
 /**
  * 配制文件的key的信息
- * @author liujun
- * @date 2016年12月30日
+ * or liujun
+ *  2016年12月30日
  * @version 0.0.1
  */
 public enum PropertiesKeyEnum {
@@ -16,13 +16,13 @@ public enum PropertiesKeyEnum {
 
     /**
      * 分配的内存标识
-    * @字段说明 key
+    *  key
     */
     private String key;
 
     /**
      * 类的相关信息
-    * @字段说明 classFile
+    *  classFile
     */
     private String value;
     

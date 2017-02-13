@@ -7,45 +7,45 @@ import io.mycat.bigmem.chunkpageallot.buffer.MycatBufferBase;
 
 /**
  * 进行内存页数据的相关的抽象
- * @author kk
- * @date 2017年1月3日
+ * or kk
+ *  2017年1月3日
  * @version 0.0.1
  */
 public abstract class BufferPageBase {
 
     /**
      * 操作的buffer信息
-    * @字段说明 buffer
+    *  buffer
     */
     protected MycatBufferBase buffer;
 
     /**
     * 每个chunk的大小
-    * @字段说明 chunkSize
+    *  chunkSize
     */
     protected int chunkSize;
 
     /**
     * 总的chunk数
-    * @字段说明 chunkIndex
+    *  chunkIndex
     */
     protected int chunkCount;
 
     /**
     * 用于标识内存是否使用集合
-    * @字段说明 memUseSet
+    *  memUseSet
     */
     protected final BitSet memUseSet;
 
     /**
     * 是否锁定标识
-    * @字段说明 isLock
+    *  isLock
     */
     protected AtomicBoolean isLock = new AtomicBoolean(false);
 
     /**
      * 可以使用的chunkNum
-     * @字段说明 useMemoryChunkNum
+     *  useMemoryChunkNum
      */
     protected int canUseChunkNum;
 
@@ -91,15 +91,15 @@ public abstract class BufferPageBase {
 
     /**
      * 需要实现的，能够计算可用chunk的方法
-     * @param chunkNum
-     * @return
+     * @param chunkNum 参数
+     * @return 返回
      */
     public abstract boolean checkNeedChunk(int chunkNum);
 
     /**
      * 进行指定内存块分配的方法
      * @param needChunkSize 需要的内存页数大小
-     * @return
+     * @return 返回 
      */
     public abstract MycatBufferBase alloactionMemory(int needChunkSize);
 
@@ -108,7 +108,7 @@ public abstract class BufferPageBase {
      * @param parentBuffer 分配的内存对象
      * @param chunkStart 开始的内存块索引号
      * @param chunkNum 归还的数量
-     * @return
+     * @return 返回
      */
     public abstract boolean recycleBuffer(MycatBufferBase parentBuffer, int chunkStart, int chunkNum);
 

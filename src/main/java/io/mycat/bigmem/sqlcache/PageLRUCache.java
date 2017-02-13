@@ -13,8 +13,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * 通过LRU机制 Cache Buffer Page，提供高访问速度
- * @author zagnix
- * @create 2016-12-02 14:37
+ * or zagnix
+ *  2016-12-02 14:37
  */
 
 public class PageLRUCache {
@@ -43,9 +43,9 @@ public class PageLRUCache {
 
     /**
      * 向Cache添加一个page，会触发Page Sweep操作
-     * @param key
-     * @param value
-     * @param ttlInMilliSeconds
+     * @param key 参数
+     * @param value 参数
+     * @param ttlInMilliSeconds 参数
      */
     public void put(Long key, MyCatBufferPage value, long ttlInMilliSeconds) {
         Collection<MyCatBufferPage> values = null;
@@ -75,8 +75,8 @@ public class PageLRUCache {
     /**
      * 根据Page Index 得到对应的 Page
      * 同时会设置该Page的访问时间，和引用计数+1
-     * @param key
-     * @return
+     * @param key 参数
+     * @return 返回
      */
     public MyCatBufferPage get(final Long key) {
         try {
@@ -96,7 +96,7 @@ public class PageLRUCache {
      * 将上次访问时间超过Cache TTL 和 引用数=0的Page
      * 存放到collection中，供put调用时候，异步从内存
      * 中刷到磁盘上
-     * @return
+     * @return 返回
      */
 
     private Collection<MyCatBufferPage> pageSweep() {
@@ -126,7 +126,7 @@ public class PageLRUCache {
 
     /**
      * 引用计数减1
-     * @param key
+     * @param key 参数
      */
 
     public void release(final Long key) {
@@ -143,7 +143,7 @@ public class PageLRUCache {
 
     /**
      * 缓存page的大小
-     * @return
+     * @return 返回
      */
     public int size() {
         try {
@@ -157,7 +157,7 @@ public class PageLRUCache {
 
     /**
      * 将所有缓存在内存中Page 数据，刷到磁盘中去
-     * @throws IOException
+     * @throws IOException 异常
      */
     public void removeAll()  throws IOException {
         try {
@@ -178,9 +178,9 @@ public class PageLRUCache {
 
     /**
      * 将index Page 数据，刷到磁盘中去
-     * @param key
-     * @return
-     * @throws IOException
+     * @param key 参数
+     * @return 返回
+     * @throws IOException 异常
      */
 
     public MyCatBufferPage remove(final Long key) throws IOException {

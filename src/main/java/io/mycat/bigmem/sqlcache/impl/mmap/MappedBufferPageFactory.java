@@ -26,8 +26,8 @@ import static java.nio.channels.FileChannel.MapMode.READ_WRITE;
 /**
  *  Memroy Mapped Page Factory
  *
- * @author zagnix
- * @create 2016-11-18 16:46
+ * or zagnix
+ *  2016-11-18 16:46
  */
 
 public class MappedBufferPageFactory implements IBufferPageFactory{
@@ -83,9 +83,9 @@ public class MappedBufferPageFactory implements IBufferPageFactory{
 
     /**
      * 查询page
-     * @param index
-     * @return
-     * @throws IOException
+     * @param index 参数
+     * @return 返回 
+     * @throws IOException 异常
      */
     public MyCatBufferPage acquirePage(long index) throws IOException {
         /**
@@ -165,7 +165,7 @@ public class MappedBufferPageFactory implements IBufferPageFactory{
 
     /**
      * 回收Page
-     * @param index
+     * @param index 参数
      */
     public void releasePage(long index) {
         pageLRUCache.release(index);
@@ -188,8 +188,8 @@ public class MappedBufferPageFactory implements IBufferPageFactory{
 
     /**
      * 根据索引删除页文件，调用者需要同步访问
-     * @param index
-     * @throws IOException
+     * @param index 参数
+     * @throws IOException 异常
      */
     public void deletePage(long index) throws IOException {
         pageLRUCache.remove(index);
@@ -244,6 +244,8 @@ public class MappedBufferPageFactory implements IBufferPageFactory{
 
     /**
      * thread unsafe, caller need synchronization
+     * @param indexes 索引
+     * @throws IOException 异常
      */
     public void deletePages(Set<Long> indexes) throws IOException {
         if (indexes == null) return;

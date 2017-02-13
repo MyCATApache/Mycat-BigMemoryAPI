@@ -12,8 +12,8 @@ import io.mycat.bigmem.chunkpageallot.recycle.MemoryPageClearUpInf;
 
 /**
  * 使用标记-移动的算法进行内存块的回收
- * @author kk
- * @date 2017年1月3日
+ * or kk
+ *  2017年1月3日
  * @version 0.0.1
  */
 public class MarkMovePageRecycleImpl implements MemoryPageClearUpInf {

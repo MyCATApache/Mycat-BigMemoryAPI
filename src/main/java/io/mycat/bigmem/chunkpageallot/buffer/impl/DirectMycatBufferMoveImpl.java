@@ -26,19 +26,19 @@ public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatM
 
     /**
      * 用来进行自己内存管理的对象
-    * @字段说明 unsafe
+    *  unsafe
     */
     private Unsafe unsafe;
 
     /**
      * 是否进行内存整理标识,默认为true，即允许进行整理
-    * @字段说明 clearFlag
+    *  clearFlag
     */
     private volatile boolean clearFlag = true;
 
     /**
      * 用来控制队列的访问，同一时间，不能被多个线程同同时操作队列
-    * @字段说明 lock
+    *  lock
     */
     private Semaphore accessReq = new Semaphore(1);
 
@@ -135,7 +135,7 @@ public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatM
      * 将添加的指针加1
     * 方法描述
     * @return
-    * @创建日期 2016年12月23日
+    *  2016年12月23日
     */
     private long addPutPos() {
         if (this.putPosition >= this.limit)
@@ -147,7 +147,7 @@ public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatM
      * 将获取的指针加1
     * 方法描述
     * @return
-    * @创建日期 2016年12月23日
+    *  2016年12月23日
     */
     private long addGetPos() {
         if (this.getPosition > this.limit)
@@ -179,7 +179,7 @@ public class DirectMycatBufferMoveImpl extends MycatBufferBase implements MycatM
     /**
      * 进行内存整理的标识验证
     * 方法描述
-    * @创建日期 2016年12月27日
+    *  2016年12月27日
     */
     private void checkClearFlag() {
         // 仅当不进行整理时，才能进行操作

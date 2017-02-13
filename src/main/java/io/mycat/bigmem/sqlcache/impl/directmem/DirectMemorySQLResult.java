@@ -7,8 +7,8 @@ import java.io.IOException;
 /**
  * 基于Direct Memory Cache,用queue实现
  *
- * @author zagnix
- * @create 2016-12-28 07:46
+ * or zagnix
+ *  2016-12-28 07:46
  */
 
 public class DirectMemorySQLResult implements ISQLResult {

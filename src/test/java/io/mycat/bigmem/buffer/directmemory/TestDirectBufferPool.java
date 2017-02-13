@@ -44,7 +44,7 @@ public class TestDirectBufferPool {
     * 方法描述
     * @param buffer
      * @throws IOException 
-    * @创建日期 2016年12月23日
+    *  2016年12月23日
     */
     public static void fillValue(MycatBufferBase buffer) throws IOException {
         for (int i = 0; i < buffer.capacity(); i++) {

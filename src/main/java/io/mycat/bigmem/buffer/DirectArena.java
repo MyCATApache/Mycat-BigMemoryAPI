@@ -6,8 +6,8 @@ import java.nio.ByteBuffer;
 import sun.nio.ch.DirectBuffer;
 
 /**
-*@desc
-*@author zhangwy   @date 2017年1月2日 下午6:08:54
+*
+*or zhangwy    2017年1月2日 下午6:08:54
 **/
 public class DirectArena extends Arena<ByteBuffer>{
 

@@ -13,9 +13,8 @@ import org.apache.log4j.Logger;
 /**
  * 进行资源文件的公共查找
  * 
- * @author kk
- * @date 2016年12月31日
- * @vsersion 0.0.1
+ * or kk
+ *  2016年12月31日
  */
 public class PropertiesUtils {
 

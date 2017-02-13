@@ -6,7 +6,7 @@ import java.io.IOException;
 public class IOutils {
     /**
      * 关闭流
-     * @param stream
+     * @param stream 流参数
      */
     public static void closeStream(Closeable stream) {
         if (null != stream) {

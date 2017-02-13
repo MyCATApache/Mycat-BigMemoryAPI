@@ -8,7 +8,7 @@ public class ThreadPool {
 
     /**
      * 线程池对象
-    * @字段说明 POOLEXECUTOR
+    *  POOLEXECUTOR
     */
     private ExecutorService POOLEXECUTOR = Executors.newFixedThreadPool(10);
 
@@ -22,7 +22,7 @@ public class ThreadPool {
      * 提交一个无返回值的任务
     * 方法描述
     * @param runjob
-    * @创建日期 2016年12月26日
+    *  2016年12月26日
     */
     public void submit(Runnable runjob) {
         POOLEXECUTOR.submit(runjob);
@@ -30,10 +30,8 @@ public class ThreadPool {
 
     /**
      * 提交一个带返回值的任务
-    * 方法描述
-    * @param callJob
-    * @创建日期 2016年12月26日
-    */
+     * @param callJob 参数
+     */
     public <T> void submit(Callable<T> callJob) {
         POOLEXECUTOR.submit(callJob);
     }

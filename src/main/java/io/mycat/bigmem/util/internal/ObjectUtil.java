@@ -12,6 +12,9 @@ public final class ObjectUtil {
     /**
      * Checks that the given argument is not null. If it is, throws {@link NullPointerException}.
      * Otherwise, returns the argument.
+     * @param arg 参数
+     * @param text 参数
+     * @return 参数 
      */
     public static <T> T checkNotNull(T arg, String text) {
         if (arg == null) {
@@ -23,6 +26,9 @@ public final class ObjectUtil {
     /**
      * Checks that the given argument is strictly positive. If it is, throws {@link IllegalArgumentException}.
      * Otherwise, returns the argument.
+     * @param i 参数
+     * @param name 参数
+     * @return 参数
      */
     public static int checkPositive(int i, String name) {
         if (i <= 0) {
@@ -34,6 +40,9 @@ public final class ObjectUtil {
     /**
      * Checks that the given argument is strictly positive. If it is, throws {@link IllegalArgumentException}.
      * Otherwise, returns the argument.
+     * @param i 参数
+     * @param name 参数
+     * @return 参数
      */
     public static long checkPositive(long i, String name) {
         if (i <= 0) {
@@ -45,6 +54,9 @@ public final class ObjectUtil {
     /**
      * Checks that the given argument is positive or zero. If it is, throws {@link IllegalArgumentException}.
      * Otherwise, returns the argument.
+     * @param i 参数
+     * @param name 参数
+     * @return 参数
      */
     public static int checkPositiveOrZero(int i, String name) {
         if (i < 0) {
@@ -56,6 +68,9 @@ public final class ObjectUtil {
     /**
      * Checks that the given argument is positive or zero. If it is, throws {@link IllegalArgumentException}.
      * Otherwise, returns the argument.
+      * @param i 参数
+     * @param name 参数
+     * @return 参数
      */
     public static long checkPositiveOrZero(long i, String name) {
         if (i < 0) {
@@ -68,6 +83,9 @@ public final class ObjectUtil {
      * Checks that the given argument is neither null nor empty.
      * If it is, throws {@link NullPointerException} or {@link IllegalArgumentException}.
      * Otherwise, returns the argument.
+     * @param array 参数
+     * @param name 参数
+     * @return 返回 
      */
     public static <T> T[] checkNonEmpty(T[] array, String name) {
         checkNotNull(array, name);

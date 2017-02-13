@@ -57,8 +57,8 @@ public final class UnsafeUtil {
 
 	/**
 	 * 
-	 * @param o
-	 * @return
+	 * @param o 参数
+	 * @return 返回 
 	 */
 	public static long addressOf(Object o) {
 		return vmDetail.addressOf(o);
@@ -183,7 +183,7 @@ public final class UnsafeUtil {
     
     /**
      * 
-     * @return 
+     * @return  返回 
      */
 	public static long maxDirectMemory() {
 	        long maxDirectMemory = 0;

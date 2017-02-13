@@ -14,9 +14,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * ICache实现类
  *
- * @author zagnix
+ * or zagnix
  * @version 1.0
- * @create 2016-12-30 16:53
+ *  2016-12-30 16:53
  */
 
 public class CacheImp<K,V> implements ICache<K,V> {
@@ -101,9 +101,9 @@ public class CacheImp<K,V> implements ICache<K,V> {
     /**
      * put (k，v) to map
      *
-     * @param key
-     * @param value
-     * @param keyer
+     * @param key 参数
+     * @param value 参数
+     * @param keyer 参数
      */
     @Override
     public void put(K key, V value,Keyer<K,V> keyer) {
@@ -114,8 +114,8 @@ public class CacheImp<K,V> implements ICache<K,V> {
     /**
      * get value
      *
-     * @param key
-     * @return
+     * @param key 参数
+     * @return 返回 
      */
     @Override
     public V get(K key) {
@@ -141,7 +141,7 @@ public class CacheImp<K,V> implements ICache<K,V> {
     /**
      * remove key
      *
-     * @param key
+     * @param key 参数
      */
     @Override
     public void remove(K key) {

@@ -2,7 +2,7 @@ package io.mycat.bigmem.util;
 
 /**
  * Created by tracywwp on 2017/1/11 0011.
- * An {@link IllegalStateException} which is raised when a user attempts to access a {@link ReferenceCounted} whose
+ * An {link IllegalStateException} which is raised when a user attempts to access a {link ReferenceCounted} whose
  * reference count has been decreased to 0 (and consequently freed).
  */
 public class IllegalReferenceCountException extends IllegalStateException {

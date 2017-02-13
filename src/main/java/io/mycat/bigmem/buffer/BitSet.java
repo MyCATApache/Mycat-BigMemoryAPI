@@ -1,15 +1,18 @@
 package io.mycat.bigmem.buffer;
 /**
-*@desc:
-*@author: zhangwy   @date: 2016年12月28日 上午7:28:45
+*
+*or zhangwy   : 2016年12月28日 上午7:28:45
 **/
 public class BitSet {
 
 	private long[] bits;
 	private final int aviableNum;
 	private long nextAvail;
+	
+	
 	/**
-	 * @param aviableNum
+	 * 构造
+	 * @param aviableNum 参数
 	 */
 	public BitSet(int aviableNum) {
 		this.aviableNum = aviableNum;
@@ -62,9 +65,9 @@ public class BitSet {
 		}
 	}
 	/**
-	*@desc:  寻找单个long里面的空闲的位置
-	*@return: long
-	*@auth: zhangwy @date: 2016年12月28日 上午7:50:24
+	*  寻找单个long里面的空闲的位置
+	*@return long
+	*  zhangwy : 2016年12月28日 上午7:50:24
 	**/
 	private long findFreebit(int index) {
 		if(nextAvail != -1) {

@@ -14,14 +14,14 @@ package io.mycat.bigmem.chunkpageallot.console;
 public class BufferException extends RuntimeException {
 
     /**
-    * @字段说明 serialVersionUID
+    *  serialVersionUID
     */
     private static final long serialVersionUID = 1L;
 
     /**
      * 纯描述信息
     * 构造方法
-    * @param msg
+    * @param msg 消息
     */
     public BufferException(String msg) {
         super(msg);
@@ -30,8 +30,8 @@ public class BufferException extends RuntimeException {
     /**
      * 带异步信息
     * 构造方法
-    * @param msg
-    * @param e
+    * @param msg 消息
+    * @param e 参数
     */
     public BufferException(String msg, Throwable e) {
         super(msg, e);

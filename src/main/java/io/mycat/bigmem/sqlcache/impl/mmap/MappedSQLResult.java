@@ -19,8 +19,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * 基于内存映射Cache,用queue实现
  *
- * @author zagnix
- * @create 2016-12-02 15:46
+ * or zagnix
+ *  2016-12-02 15:46
  */
 public class MappedSQLResult implements ISQLResult {
     private final static Logger LOGGER = LoggerFactory.getLogger(MappedSQLResult.class);
@@ -172,9 +172,9 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * MappedBigCache构造函数
-     * @param cacheDir
-     * @param cacheName
-     * @throws IOException
+     * @param cacheDir 参数
+     * @param cacheName 参数
+     * @throws IOException 参数
      */
     public MappedSQLResult(String cacheDir, String cacheName) throws IOException{
         this(cacheDir,cacheName,DEFAULT_DATA_PAGE_SIZE);
@@ -182,10 +182,10 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * MappedSQLResult 构造函数
-     * @param cacheDir
-     * @param cacheName
-     * @param cacheSize
-     * @throws IOException
+     * @param cacheDir 参数
+     * @param cacheName 参数
+     * @param cacheSize 参数
+     * @throws IOException 参数
      */
     public MappedSQLResult(String cacheDir, String cacheName, int cacheSize) throws IOException {
 
@@ -261,7 +261,7 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * 初始化Queue的 front index 和 tail index
-     * @throws IOException
+     * @throws IOException  参数
      */
     void initArrayIndex() throws IOException {
         /**
@@ -287,7 +287,7 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * 初始化当前页号和偏移量
-     * @throws IOException
+     * @throws IOException 参数
      */
     void initDataPageIndex() throws IOException {
         /**
@@ -364,9 +364,9 @@ public class MappedSQLResult implements ISQLResult {
     }
     /**
      * 把data存到数据中
-     * @param data
-     * @return
-     * @throws IOException
+     * @param data 参数
+     * @return 参
+     * @throws IOException 参
      */
     public long put(byte[] data) throws IOException {
         try {
@@ -530,8 +530,8 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * 取数据
-     * @return
-     * @throws IOException
+     * @return 参数
+     * @throws IOException 参数
      */
     public byte[] next() throws IOException {
         try {
@@ -598,9 +598,9 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      *get下标为index的数据
-     * @param index
-     * @return
-     * @throws IOException
+     * @param index 参数
+     * @return 参数
+     * @throws IOException 参数
      */
     public byte[] get(long index) throws IOException {
         try {
@@ -646,7 +646,7 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * 队列大小
-     * @return
+     * @return 参数
      */
     public long size() {
         long qFront = this.queueFrontIndex.get();
@@ -705,11 +705,11 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * 将Data页号，以及当前可写偏移位置，写入data的长度，以及op位编码成一个64为的地址
-     * @param dataPageNumber
-     * @param currentOffset
-     * @param dataLen
-     * @param op
-     * @return
+     * @param dataPageNumber 参数
+     * @param currentOffset 参数
+     * @param dataLen 参数
+     * @param op 参数
+     * @return 参数
      */
     public static long encodeIndexAddress(int dataPageNumber,
                                           int currentOffset,int dataLen,byte op) {
@@ -722,8 +722,8 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * 从索引地址中分离出页号
-     * @param indexAddress
-     * @return
+     * @param indexAddress 参数
+     * @return 参数
      */
     public static int decodeDataPageNumber(long indexAddress) {
         return (int)((indexAddress >>>
@@ -762,7 +762,7 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * 判断队列是否为空？
-     * @return
+     * @return 参数
      */
     public boolean isEmpty() {
         try {
@@ -775,7 +775,7 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * 判断队列是否满了
-     * @return
+     * @return 参数
      */
     public boolean isFull() {
         try {
@@ -791,7 +791,7 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * 队头下标
-     * @return
+     * @return 参数
      */
     public long getQueueFrontIndex() {
         try {
@@ -804,7 +804,7 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * 队尾下标
-     * @return
+     * @return 参数
      */
     public long getQueueTailIndex() {
         try {
@@ -833,7 +833,7 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * 从cache中移走，并unmap操作
-     * @throws IOException
+     * @throws IOException 参数
      */
     public void recycle() throws IOException {
         try {
@@ -871,7 +871,7 @@ public class MappedSQLResult implements ISQLResult {
 
     /**
      * 删除所有文件并初始化环境
-     * @throws IOException
+     * @throws IOException 参数
      */
     public void removeAll() throws IOException {
         try {

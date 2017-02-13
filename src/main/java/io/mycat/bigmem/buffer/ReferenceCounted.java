@@ -9,41 +9,48 @@ public interface ReferenceCounted {
     /**
      * 返回此对象的引用计数
      * 这意味着该对象已被释放。
+     * @return 返回
      */
     int refCnt();
 
     /**
      * 增加参考计数 +1
+     * @return 返回
      */
     ReferenceCounted retain();
 
     /**
      * 通过指定增加引用计数
+     * @param increment 参数
+     * @return 返回
      */
     ReferenceCounted retain(int increment);
 
     /**
-     *
      * 为调试目的记录当前对象的访问位置.
      * 如果这个对象是确定被泄露，信息记录该操作将提供给您通过
+     * @return 返回信息
      */
     ReferenceCounted touch();
 
     /**
-     *
      * 记录该对象的当前访问的位置，用于调试目的额外的任意信息。
+     * @param hint 参数
+     * @return 返回
      */
     ReferenceCounted touch(Object hint);
 
     /**
-     *减少引用计数的{ 1 } @代码和回收这个对象如果引用计数达到{ 0 }
+     *减少引用计数的{ 1 } 代码和回收这个对象如果引用计数达到{ 0 }
+     *@return 返回
      *
      */
     boolean release();
 
     /**
      * 减少指定数的引用计数
-     *
+     * @param decrement 参数信息
+     * @return 返回
      */
     boolean release(int decrement);
 }
