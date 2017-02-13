@@ -14,6 +14,7 @@ public final class ObjectUtil {
      * Otherwise, returns the argument.
      * @param arg 参数
      * @param text 参数
+     * @param <T> 参数泛型与返回泛型
      * @return 参数 
      */
     public static <T> T checkNotNull(T arg, String text) {
@@ -85,6 +86,7 @@ public final class ObjectUtil {
      * Otherwise, returns the argument.
      * @param array 参数
      * @param name 参数
+     * @param <T> 参数与返回泛型
      * @return 返回 
      */
     public static <T> T[] checkNonEmpty(T[] array, String name) {

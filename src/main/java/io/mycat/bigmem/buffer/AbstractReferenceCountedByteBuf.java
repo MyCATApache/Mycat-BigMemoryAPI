@@ -28,6 +28,7 @@ public abstract class AbstractReferenceCountedByteBuf extends BaseByteBuffer {
 
     /**
      * 由子类直接使用的不安全操作，该类直接设置缓冲区的引用计数
+     * @param refCnt 参数
      */
     protected final void setRefCnt(int refCnt) {
         this.refCnt = refCnt;

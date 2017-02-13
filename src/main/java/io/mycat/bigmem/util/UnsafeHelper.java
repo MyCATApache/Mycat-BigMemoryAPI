@@ -30,10 +30,10 @@ public class UnsafeHelper {
     /**
      * Returns the size of the header for an instance of this class (in bytes).
      *
-     * <p>More information <a href="http://www.codeinstructions.com/2008/12/java-objects-memory-structure.html">http://www.codeinstructions.com/2008/12/java-objects-memory-structure.html</a>
+     * More information <a href="http://www.codeinstructions.com/2008/12/java-objects-memory-structure.html">http://www.codeinstructions.com/2008/12/java-objects-memory-structure.html</a>
      * and <a href="http://stackoverflow.com/a/17348396/88646">http://stackoverflow.com/a/17348396/88646</a>
      *
-     * <p><pre>
+     * <pre>
      * ,------------------+------------------+------------------ +---------------.
      * |    mark word(8)  | klass pointer(4) |  array size (opt) |    padding    |
      * `------------------+------------------+-------------------+---------------'

@@ -18,6 +18,7 @@ public interface CacheStrategyInf {
     /**
      * 从缓存中获取数据
      * @param p 参数
+     * @param <T> 返回的泛型信息
      * @return 返回信息
      */
     public <T> T getBufferData(Map<String, Object> p);
