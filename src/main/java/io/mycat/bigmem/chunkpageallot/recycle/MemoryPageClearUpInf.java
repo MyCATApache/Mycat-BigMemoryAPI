@@ -4,7 +4,7 @@ import io.mycat.bigmem.chunkpageallot.bufferpage.BufferPageBase;
 
 /**
  * 进行内存页的内存整理的接口
- * @author kk
+ * or kk
  * 2017年1月2日
  */
 public interface MemoryPageClearUpInf {

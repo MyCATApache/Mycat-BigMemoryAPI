@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 /**
  * allocator , recycle and gc all kind of buffers
  * 
- * @author shenli
+ * or shenli
  *
  */
 public class MemoryAllocator {
@@ -121,9 +121,7 @@ public class MemoryAllocator {
 
 	/**
 	 * 清除Private Arena
-	 * 
-	 * @param privateIdx
-	 * @return
+	 * @param privateIdx 参数
 	 */
 	public void freePrivate(int privateIdx) {
 //		Arena arena = privateArenas.get(privateIdx);
@@ -138,10 +136,9 @@ public class MemoryAllocator {
 
 	/**
 	 * 在private上分配buff
-	 * 
-	 * @param privateIdx
-	 * @param capacity
-	 * @return
+	 * @param privateIdx 参数
+	 * @param capacity 参数
+	 * @return 返回
 	 */
 	public BaseByteBuffer directBuffer(int privateIdx, int capacity) {
 		return privateArenas.get(privateIdx).allocateBuffer(capacity);

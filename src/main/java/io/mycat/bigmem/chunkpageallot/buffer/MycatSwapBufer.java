@@ -27,32 +27,28 @@ import io.mycat.bigmem.buffer.CatCallbackInf;
 public interface MycatSwapBufer {
 
     /**
-     * 与beginOp操作类似，将前内存数据交换到磁盘上,标识开始
-    * 方法描述
-    * @创建日期 2016年12月21日
-    */
+     *  与beginOp操作类似，将前内存数据交换到磁盘上,标识开始
+     * @throws IOException 异常
+     */
     public void swapln() throws IOException;
 
     /**
      * 与commitOp操作类似,当前交换到磁盘完成，标识结束
-    * 方法描述
-    * @创建日期 2016年12月21日
-    */
+     */
     public void swapOut();
 
     /**
      * 进行操作标识，完成调用回调通知函数
-    * 方法描述
-    * @param notify
-    * @创建日期 2016年12月22日
-    */
+     * @param notify 参数
+     * @throws IOException 异常
+     */
     public void swapIn(CatCallbackInf notify) throws IOException;
 
     /**
      *  与commitOp操作类型，标识结束,完成调用回调通知函数
     * 方法描述
-    * @param notify
-    * @创建日期 2016年12月22日
+    * @param notify 通知
+    *  2016年12月22日
     */
     public void swapOut(CatCallbackInf notify);
 

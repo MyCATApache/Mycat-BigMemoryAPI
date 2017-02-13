@@ -2,8 +2,8 @@
 package io.mycat.bigmem.buffer;
 
 /**
-*@desc 分配的内存的句柄
-*@author zhangwy   @date 2017年1月7日 上午8:25:53
+* 分配的内存的句柄
+*or zhangwy    2017年1月7日 上午8:25:53
 **/
 public class Handle {
 	
@@ -11,10 +11,11 @@ public class Handle {
 	private Chunk chunk;
 	private int capacity;
 	
-	/**
-	 * @param handle
-	 * @param chunk
-	 * @param capacity
+	/** 
+	 * 构造
+	 * @param handle 参数
+	 * @param chunk 参数
+	 * @param capacity 参数
 	 */
 	public Handle(long handle, Chunk chunk, int capacity) {
 		super();

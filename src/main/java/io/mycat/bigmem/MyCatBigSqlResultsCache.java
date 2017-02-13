@@ -14,9 +14,9 @@ import static com.google.common.hash.Hashing.murmur3_32;
 /**
  * Cache SQL 大结果集 对外接口
  *
- * @author zagnix
+ * or zagnix
  * @version 1.0
- * @create 2016-12-30 10:51
+ *  2016-12-30 10:51
  */
 
 public class MyCatBigSqlResultsCache {
@@ -62,7 +62,7 @@ public class MyCatBigSqlResultsCache {
      * 获取sql语句，已经缓存的结果集
      *
      * @param sql  sql 语句
-     * @return
+     * @return 返回
      */
     public BigSQLResult getSQLResult(String sql){
         /**
@@ -91,7 +91,7 @@ public class MyCatBigSqlResultsCache {
 
     /**
      * 对外对象实例
-     * @return
+     * @return 返回 
      */
     public static MyCatBigSqlResultsCache getInstance() {
         return INSTANCE;

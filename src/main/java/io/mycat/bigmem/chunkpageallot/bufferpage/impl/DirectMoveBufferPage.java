@@ -29,10 +29,10 @@ public class DirectMoveBufferPage extends BufferPageBase implements BufferPageMo
 
 
     /**
-    * 构造方法
-    * @param memorySize
-    * @param chunkSize
-    */
+     * 构造方法
+     * @param buffer 参数
+     * @param chunkSize 参数
+     */
     public DirectMoveBufferPage(MycatBufferBase buffer, int chunkSize) {
         // 进行父类的引用
         super(buffer, chunkSize);
@@ -52,9 +52,9 @@ public class DirectMoveBufferPage extends BufferPageBase implements BufferPageMo
     /**
     * 检查当前内存页能否满足内存数据的分配要求
     * 方法描述
-    * @param chunkNum
+    * @param chunkNum 参数
     * @return 1,可分配 0，不能
-    * @创建日期 2016年12月19日
+    *  2016年12月19日
     */
     public boolean checkNeedChunk(int chunkNum) {
         // 仅在未锁定的情况下，才进行检查
@@ -67,14 +67,9 @@ public class DirectMoveBufferPage extends BufferPageBase implements BufferPageMo
         return false;
     }
 
-    /**
-    * 获得chunk的buffer信息
-    * 方法描述
-    * @param needChunkSize
-    * @param timeout 系统过期时间
-    * @return
-    * @创建日期 2016年12月19日
-    */
+    /* (non-Javadoc)
+     * @see io.mycat.bigmem.chunkpageallot.bufferpage.BufferPageBase#alloactionMemory(int)
+     */
     public MycatBufferBase alloactionMemory(int needChunkSize) {
         // 如果当前的可分配的内在块小于需要内存块，则返回
         if (canUseChunkNum < needChunkSize) {
@@ -149,14 +144,9 @@ public class DirectMoveBufferPage extends BufferPageBase implements BufferPageMo
         return null;
     }
 
-    /**
-    * 进行内存的归还操作，以便后面再使用
-    * 方法描述
-    * @param parentBuffer 内存页信息
-    * @param chunkStart 开始块的号
-    * @param chunkNum 归还的数量
-    * @创建日期 2016年12月19日
-    */
+    /* (non-Javadoc)
+     * @see io.mycat.bigmem.chunkpageallot.bufferpage.BufferPageBase#recycleBuffer(io.mycat.bigmem.chunkpageallot.buffer.MycatBufferBase, int, int)
+     */
     public boolean recycleBuffer(MycatBufferBase bufferParam, int chunkStart, int chunkNum) {
 
         if (this.buffer == bufferParam) {

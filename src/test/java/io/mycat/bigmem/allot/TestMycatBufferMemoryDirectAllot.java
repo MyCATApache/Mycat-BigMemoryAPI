@@ -7,8 +7,8 @@ import io.mycat.bigmem.chunkpageallot.console.ChunkMemoryAllotEnum;
 
 /**
  * 测试内存的可移动的分配操作
- * @author liujun
- * @date 2016年12月30日
+ * or liujun
+ *  2016年12月30日
  * @version 0.0.1
  */
 public class TestMycatBufferMemoryDirectAllot {

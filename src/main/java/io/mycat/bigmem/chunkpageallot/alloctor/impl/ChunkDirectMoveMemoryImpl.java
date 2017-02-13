@@ -9,20 +9,20 @@ import io.mycat.bigmem.chunkpageallot.bufferpage.impl.DirectMoveBufferPage;
 
 /**
  * 进行直接可移动的大内存的分配操作
- * @author liujun
+ * or liujun
  * 2016年12月29日
  */
 public class ChunkDirectMoveMemoryImpl implements ChunkMemoryAllotInf {
 
     /**
      * 内存池对象信息
-     * @字段说明 pool
+     *  pool
      */
     private BufferPageBase[] POOL;
 
     /**
     * 每个chunk的大小
-    * @字段说明 CHUNK_SIZE
+    *  CHUNK_SIZE
     */
     private int CHUNK_SIZE;
 

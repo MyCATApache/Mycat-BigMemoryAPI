@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
  * 存数据:采用先占用位置,然后在放数据的原则.
  * 取数据:采用先取数据,置为cas置为空,然后在将读指针加一的原则,
  * 		需要注意的时候,由于是循环数组,取出来数据不为空,有可能已经是又被放进去的数据了.要保证当前reader指针没被改变的情况下才可以去cas改变置为空.
- * @auth zhangwy 
+ *  zhangwy 
  * */
 public class MpsQueue<T> {
 	protected AtomicLong readerIndex;
@@ -59,8 +59,9 @@ public class MpsQueue<T> {
 		return true;
 	}
 	/**
-	 ** get a element from the queue 
-	 ***/
+	 * get a element from the queue 
+	 * @return 返回 
+	 */
 	public T get() {
 		T element  = null;
 		long reader ,writer ;

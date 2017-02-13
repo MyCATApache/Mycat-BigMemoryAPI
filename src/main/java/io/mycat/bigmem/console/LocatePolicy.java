@@ -15,19 +15,19 @@ public enum LocatePolicy {
 
     /**
      * 使用本地的内存进行缓存的策略
-    * @字段说明 Core
+    *  Core
     */
     Core(1),
 
     /**
      * 使用文件进行映射的缓存的策略信息
-    * @字段说明 Normal
+    *  Normal
     */
     Normal(2);
 
     /**
      * 策略信息
-    * @字段说明 policy
+    *  policy
     */
     private int policy;
 

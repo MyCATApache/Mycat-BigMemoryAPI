@@ -11,9 +11,9 @@ import static com.google.common.hash.Hashing.murmur3_32;
 /**
  * SQL大结果集缓存
  *
- * @author zagnix
+ * or zagnix
  * @version 1.0
- * @create 2016-12-27 18:48
+ *  2016-12-27 18:48
  */
 
 public class BigSQLResult implements Iterator {
@@ -42,7 +42,7 @@ public class BigSQLResult implements Iterator {
 
     /**
      * 添加一条sql二进制数据到Cache存储中
-     * @param data
+     * @param data 参数
      */
     public void put(byte [] data){
         try {
@@ -54,7 +54,7 @@ public class BigSQLResult implements Iterator {
 
     /**
      * 数据是否为空
-     * @return
+     * @return 返回 
      */
     public boolean isEmpty(){
         return sqlResult.isEmpty();
@@ -62,7 +62,7 @@ public class BigSQLResult implements Iterator {
 
     /**
      * 还有下一条sql结果集？
-     * @return
+     * @return 返回 
      */
     public boolean hasNext() {
         return !sqlResult.isEmpty();
@@ -71,7 +71,7 @@ public class BigSQLResult implements Iterator {
     /**
      * 取下一条sql结果集
      *
-     * @return
+     * @return 返回
      */
     public byte[] next()  {
         try {
@@ -98,7 +98,7 @@ public class BigSQLResult implements Iterator {
 
     /**
      * sql 结果集大小
-     * @return
+     * @return 返回
      */
     public long size(){
         return sqlResult.size();

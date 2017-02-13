@@ -20,14 +20,15 @@ package io.mycat.bigmem.chunkpageallot.buffer;
 * 文件描述：TODO
 * 版权所有：Copyright 2016 zjhz, Inc. All Rights Reserved.
 */
-public interface MycatMovableBufer  {
+public interface MycatMovableBufer {
 
     /**
-     * 内存可以被管理器移动，首次访问（一个begin & commit操作之后）之前，
+     * 内存可以被管理器移动，首次访问（一个begin 并且    commit操作之后）之前，
      * 用户需要先要调用beginOp()，即完整用法如下   
      *  Buf.beginOp();   
      *   Read or write    
      *   Buf.commitOp();    
+     * @throws InterruptedException 异常
      */
     public void beginOp() throws InterruptedException;
 
@@ -38,18 +39,16 @@ public interface MycatMovableBufer  {
 
     /**
      * 获取当前内存是否可以进行内存整理
-    * 方法描述
-    * @return
-    * @创建日期 2016年12月23日
-    */
+     * @return 标识
+     */
     public boolean getClearFlag();
-    
+
     /**
      * 进行内存的拷贝操作
      * @param srcAddress 源内存地址操作
      * @param targerAddress 目标地址操作
      * @param length 拷贝的数据长度
      */
-    public void memoryCopy(long srcAddress,long targerAddress,int length);
+    public void memoryCopy(long srcAddress, long targerAddress, int length);
 
 }

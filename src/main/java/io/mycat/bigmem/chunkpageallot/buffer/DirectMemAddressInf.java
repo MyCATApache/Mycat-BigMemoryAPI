@@ -17,7 +17,7 @@ public interface DirectMemAddressInf {
      * 获得内存地址的方法 
     * 方法描述
     * @return
-    * @创建日期 2016年12月23日
+    *  2016年12月23日
     */
     public long address();
 
@@ -25,7 +25,7 @@ public interface DirectMemAddressInf {
      * 获得附着的对象
     * 方法描述
     * @return
-    * @创建日期 2016年12月23日
+    *  2016年12月23日
     */
     public Object getAttach();
 

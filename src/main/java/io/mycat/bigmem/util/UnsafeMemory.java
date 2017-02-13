@@ -10,8 +10,8 @@ import java.lang.reflect.Field;
 /**
  * Unsafe 工具类
  *
- * @author zagnix
- * @create 2016-11-18 14:17
+ * or zagnix
+ *  2016-11-18 14:17
  */
 public final class UnsafeMemory {
     private final static Logger logger = LoggerFactory.getLogger(UnsafeMemory.class);
@@ -40,8 +40,8 @@ public final class UnsafeMemory {
 
     /**
      * 将size规整化为pagesize的倍数
-     * @param size
-     * @return
+     * @param size 参数
+     * @return 参数
      */
     public static long roundToOsPageSzie(long size) {
         long pagesize = _UNSAFE.pageSize();

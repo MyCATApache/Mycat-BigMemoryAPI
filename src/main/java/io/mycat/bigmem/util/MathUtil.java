@@ -11,7 +11,7 @@ public class MathUtil {
         return r;
     }
     /*
-     * @desc 返回最接近x的2的n次方的
+     *  返回最接近x的2的n次方的
      *
      * */
     public static int roundToPowerOfTwo(int x) {

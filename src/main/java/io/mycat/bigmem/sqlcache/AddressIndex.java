@@ -6,8 +6,8 @@ import sun.misc.Unsafe;
 /**
  * cache padding from disruptor
  *
- * @author zagnix
- * @create 2016-11-18 10:17
+ * or zagnix
+ *  2016-11-18 10:17
  */
 
 class LhsPadding
@@ -59,9 +59,9 @@ public class AddressIndex extends RhsPadding {
      *      return true
      *  else
      *      return false
-     * @param expectedValue
-     * @param newValue
-     * @return
+     * @param expectedValue 参数
+     * @param newValue 参数
+     * @return 返回 
      */
     public boolean compareAndSet(long expectedValue, long newValue) {
         return UNSAFE.compareAndSwapLong(this, VALUE_OFFSET, expectedValue, newValue);

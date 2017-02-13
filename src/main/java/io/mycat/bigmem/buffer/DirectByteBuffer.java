@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * Implements of DirectByteBuffer should completely implement
  * java.nio.ByteBuffer
  * 
- * @author shenli
+ * or shenli
  *
  */
 
@@ -51,8 +51,8 @@ public class DirectByteBuffer extends BaseByteBuffer<ByteBuffer> {
 	}
 
 	/**
-	 * @desc
-	 * @auth zhangwy @date 2017年1月2日 下午5:33:51
+	 * 
+	 *  zhangwy  2017年1月2日 下午5:33:51
 	 **/
 	private long chunkAddr(Chunk<ByteBuffer> chunk) {
 		Field field;

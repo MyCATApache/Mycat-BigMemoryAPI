@@ -34,13 +34,9 @@ public class MycatMemoryAllocator implements MemoryAllocatorInf {
     });
 
     /**
-    * 用来构建内存池对象信息
-    * 构造方法
-    * @param chunkSize
-    * @param memorySize
-    * @param poolSize
-     * @throws IOException 
-    */
+     * 用来构建内存池对象信息
+     * @throws IOException 异常信息
+     */
     public MycatMemoryAllocator() throws IOException {
         int msize = 1024 * 1024;
 
@@ -91,7 +87,7 @@ public class MycatMemoryAllocator implements MemoryAllocatorInf {
     * 方法描述
     * @param size 需要的内存大小,最好CHUNK_SIZE的倍数，以方便 内存的回收利用
     * @return
-    * @创建日期 2016年12月19日
+    *  2016年12月19日
     */
     public MycatBufferBase allocMem(int allocFlag, int size) {
 
@@ -119,7 +115,7 @@ public class MycatMemoryAllocator implements MemoryAllocatorInf {
     * 进行内存的归还操作
     * 方法描述
     * @param buffer
-    * @创建日期 2016年12月19日
+    *  2016年12月19日
     */
     public void recyleMem(MycatBufferBase buffer) {
         if (null != buffer) {

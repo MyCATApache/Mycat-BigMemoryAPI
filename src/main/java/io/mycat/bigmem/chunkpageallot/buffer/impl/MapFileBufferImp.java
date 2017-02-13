@@ -37,25 +37,25 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer,
 
     /**
      * 内存控制的对象信息 
-    * @字段说明 unsafe
+    *  unsafe
     */
     public static Unsafe unsafe;
 
     /**
      * 获得内存映射的方法
-    * @字段说明 mmap
+    *  mmap
     */
     public static final Method mmap;
 
     /**
     * 解除映射的方法
-    * @字段说明 unmmap
+    *  unmmap
     */
     public static final Method unmmap;
 
     // /**
     // * byte的内存的固定的偏移
-    // * @字段说明 BYTE_ARRAY_OFFSET
+    // *  BYTE_ARRAY_OFFSET
     // */
     // public static final int BYTE_ARRAY_OFFSET;
 
@@ -66,31 +66,31 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer,
 
     /**
      * 文件名称
-    * @字段说明 fileName
+    *  fileName
     */
     private final String fileName;
 
     /**
      * 随机文件读写信息
-    * @字段说明 randomFile
+    *  randomFile
     */
     private RandomAccessFile randomFile;
 
     /**
      * 文件通道信息
-    * @字段说明 channel2
+    *  channel2
     */
     private FileChannel channel;
 
     /**
      * 是否进行内存整理标识,默认为true，即允许进行整理
-    * @字段说明 clearFlag
+    *  clearFlag
     */
     private volatile boolean clearFlag = true;
 
     /**
      * 用来控制队列的访问，同一时间，不能被多个线程同同时操作队列
-    * @字段说明 lock
+    *  lock
     */
     private Semaphore accessReq = new Semaphore(1);
 
@@ -156,7 +156,7 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer,
     * 方法描述
     * @param offset
     * @return
-    * @创建日期 2016年12月24日
+    *  2016年12月24日
     */
     private long getIndex(long offset) {
         if (limit < offset)
@@ -168,7 +168,7 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer,
      * 将添加的指针加1
     * 方法描述
     * @return
-    * @创建日期 2016年12月23日
+    *  2016年12月23日
     */
     private long addPutPos() {
         if (this.putPosition > this.limit)
@@ -180,7 +180,7 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer,
      * 将获取的指针加1
     * 方法描述
     * @return
-    * @创建日期 2016年12月23日
+    *  2016年12月23日
     */
     private long addGetPos() {
         if (this.getPosition > this.limit)
@@ -391,7 +391,7 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer,
     /**
      * 进行内存整理的标识验证
     * 方法描述
-    * @创建日期 2016年12月27日
+    *  2016年12月27日
     */
     private void checkClearFlag() {
         // 仅当不进行整理时，才能进行操作
@@ -438,7 +438,7 @@ public class MapFileBufferImp extends MycatBufferBase implements MycatSwapBufer,
 
     /**
      * 获取文件大小的方法
-     * @return
+     * @return 返回信息
      */
     public int getFileSize() {
         return fileSize;

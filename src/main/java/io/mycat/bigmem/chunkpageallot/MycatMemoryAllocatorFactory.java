@@ -20,9 +20,8 @@ public class MycatMemoryAllocatorFactory {
     /**
      * 创建内存分配器对象
     * 方法描述
-    * @param flag 分配的标识信息
-    * @return
-    * @创建日期 2016年12月28日
+    * @return 返回
+    *  2016年12月28日
     */
     public static MemoryAllocatorInf createMemoryAlloctor() {
 
@@ -52,7 +51,7 @@ public class MycatMemoryAllocatorFactory {
     /**
      * @see<a href="https://github.com/shenlee/Mycat-BigMemory">Mycat-BigMemory</a>
      * @return
-     * @author shenli, zwyqz, tracywwp
+     * or shenli, zwyqz, tracywwp
      */
    //todo:待抽取MemoryAllocator接口类
      public MemoryAllocator getJemalloc()

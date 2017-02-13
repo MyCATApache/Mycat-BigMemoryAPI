@@ -5,9 +5,9 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * key cache生效规则
  *
- * @author zagnix
+ * or zagnix
  * @version 1.0
- * @create 2016-12-30 16:48
+ *  2016-12-30 16:48
  */
 
 public class Keyer<K,V> {

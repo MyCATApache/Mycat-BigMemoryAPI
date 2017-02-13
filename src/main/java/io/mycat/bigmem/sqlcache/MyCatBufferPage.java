@@ -10,9 +10,9 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  *  Mycat Buffer Page 抽象类
  *
- * @author zagnix
+ * or zagnix
  * @version 1.0
- * @create 2016-12-27 18:49
+ *  2016-12-27 18:49
  */
 
 public abstract class MyCatBufferPage implements IBufferPage {
@@ -52,7 +52,7 @@ public abstract class MyCatBufferPage implements IBufferPage {
 
     /**
      * Page 是 '脏页'
-     * @return
+     * @return 返回
      */
 
     public boolean isDirty() {
@@ -62,7 +62,7 @@ public abstract class MyCatBufferPage implements IBufferPage {
 
     /**
      * 设置 Page 是否 是 ‘脏页’
-     * @param dirty
+     * @param dirty 参数
      */
     public void setDirty(boolean dirty) {
         this.dirty = dirty;
@@ -70,7 +70,7 @@ public abstract class MyCatBufferPage implements IBufferPage {
 
     /**
      * Page 是否被 unmap了
-     * @return
+     * @return 返回
      */
     public boolean isRecycled() {
         return recycled;
