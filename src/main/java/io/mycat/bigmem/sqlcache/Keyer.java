@@ -20,8 +20,7 @@ public class Keyer<K,V> {
     private long accessCount=0;
     private AtomicLong refCount = new AtomicLong(0);
 
-
-
+    private boolean autoRefresh = false;
     private String sql;
     private  K key;
     private  V value;
@@ -100,4 +99,13 @@ public class Keyer<K,V> {
     public void setSql(String sql) {
         this.sql = sql;
     }
+
+    public boolean isAutoRefresh() {
+        return autoRefresh;
+    }
+
+    public void setAutoRefresh(boolean autoRefresh) {
+        this.autoRefresh = autoRefresh;
+    }
+
 }
